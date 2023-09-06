@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnlaDespegar", "UnlaDespegar.csproj", "{627CAB92-8DFD-4DFA-B1A8-49FE97B1FC37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{627CAB92-8DFD-4DFA-B1A8-49FE97B1FC37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{627CAB92-8DFD-4DFA-B1A8-49FE97B1FC37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{627CAB92-8DFD-4DFA-B1A8-49FE97B1FC37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{627CAB92-8DFD-4DFA-B1A8-49FE97B1FC37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB37C87B-95CF-4F37-BA7E-6B5C77DB87BD}
+	EndGlobalSection
+EndGlobal

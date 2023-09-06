@@ -1,0 +1,16 @@
+Descargar e instalar SQL server management studio 18
+y sql express 2019
+instalacion basica
+
+
+CMD:
+
+PASO 1: sqllocaldb info y tiene que aparecer
+MSSQLLocalDB
+
+PASO 2: en sql server management poner en server name (LocalDB)\MSSQLLocalDB
+y conectar
+
+PASO 3 : click derecho en database, poner atach y seleccionar la bdd del repo guardada en BDD.
+
+deberian tener la tabla usuario

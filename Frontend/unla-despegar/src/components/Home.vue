@@ -1,18 +1,6 @@
 <template>
  <div>
-   <b-container class="bv-example-row" v-if="localActiveSearch">
-    <h4 class="destination">{{this.localCurrentDestino}}</h4>
-</b-container>
-      <div class="my-3 p-3 rounded container" v-if="!localActiveSearch">   
-        <div class="form-group">       
-          <label for="exampleFormControlSelect1">Seleccione un Destino</label>
-          <select v-model="localDestino" class="form-control" id="exampleFormControlSelect1">
-            <option v-for="destino in localDestinos" :key="destino.id" :value="destino.id">{{destino.ciudad}}, {{destino.region}}, {{destino.pais}}</option>
-          </select>
-        </div>
-        <button @click="search()" type="button" class="btn btn-lg btn-block btn-primary">Buscar</button>
-      </div>
-      <VistaVuelo v-if="localShowVuelos"/>
+    <VistaVuelo v-if="localShowVuelos"/>
  </div>
 </template>
 
@@ -33,7 +21,7 @@ export default {
     },
     showVuelos: {
       type: Boolean,
-      default: false
+      default: true
     },
     current_destino: null
   },
@@ -65,27 +53,17 @@ export default {
   },
   methods: {
     init() {
-      this.cargaDestinos();
-      if (!this.destinoSeleccionado) {
-        this.$axios
-          .get("https://localhost:57935/api/destino")
-          .then(response => (this.localDestinos = response.data));
-      } else {
-        this.$axios
-          .get("https://localhost:57935/api/destino/" + this.destinoSeleccionado)
-          .then(response => (this.localDestinos = [response.data]));
-      }
     },
     search(){
       this.localActiveSearch = true;
-      this.localShowVuelos = true;
+      // this.localShowVuelos = true;
       this.localCurrentDestino = this.localDestinos[this.localDestino-1].ciudad +", " + this.localDestinos[this.localDestino-1].region + ", " + this.localDestinos[this.localDestino-1].pais
     },
     cargaVuelos(){
-      this.localShowVuelos = true;
+      // this.localShowVuelos = true;
     },
     cargaDestinos(){
-      this.localShowVuelos = false;
+      // this.localShowVuelos = false;
       this.localActiveSearch = false;
     }
   },

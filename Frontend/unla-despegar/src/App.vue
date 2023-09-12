@@ -5,7 +5,7 @@
       <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul id="navbar-options" class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" @click="cargaHome" href="#"><i class="fas fa-globe-americas"></i> Destinos</a>
+            <a class="nav-link" @click="cargaHome" href="#"><i class="fas fa-home"></i> Home</a>
           </li>
           <li class="nav-item" v-if="localShowReservation">
             <a class="nav-link" @click="cargaReserva" href="#"><i class="fas fa-umbrella-beach"></i> Ver Reserva</a>

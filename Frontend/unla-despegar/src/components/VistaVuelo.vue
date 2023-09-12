@@ -6,11 +6,33 @@
           <form>
             <div class="form-row p-2">
               <div class="col">
+                <input class="form-check-input" type="radio" v-model="idaVuelta" :value="true" name="inlineRadioOptions"
+                  id="inlineRadio1">
+                <label class="form-check-label" for="inlineRadio1" style="color:white;">Ida y vuelta</label>
+              </div>
+              <div class="col">
+                <input class="form-check-input" type="radio" v-model="idaVuelta" :value="false" name="inlineRadioOptions"
+                  id="inlineRadio2">
+                <label class="form-check-label" for="inlineRadio2" style="color:white;">Ida</label>
+              </div>
+              <div class="col">
+                <input class="form-check-input" type="radio" v-model="escala" :value="false" name="escalaOptions"
+                  id="escalaRadio1">
+                <label class="form-check-label" for="escalaRadio1" style="color:white;">Directo</label>
+              </div>
+              <div class="col">
+                <input class="form-check-input" type="radio" v-model="escala" :value="true" name="escalaOptions"
+                  id="escalaRadio2">
+                <label class="form-check-label" for="escalaRadio2" style="color:white;">Con escala</label>
+              </div>
+            </div>
+            <div class="form-row p-2">
+              <div class="col">
                 <b-form-input list="origen" v-model="localOrigen" placeholder="Origen"></b-form-input>
                 <datalist id="origen">
                   <select v-model="localOrigen" class="form-control">
-                    <option v-for="vuelo in localVuelosOriginal" :key="vuelo.id" :value="vuelo.origen.ciudad">
-                      {{ vuelo.origen.region }} </option>
+                    <option v-for="vueloOrigen in localListaDestinos" :key="vueloOrigen.id" :value="vueloOrigen.ciudad">
+                      {{ vueloOrigen.region }} </option>
                   </select>
                 </datalist>
               </div>
@@ -18,8 +40,8 @@
                 <b-form-input list="destino" v-model="localDestino" placeholder="Destino"></b-form-input>
                 <datalist id="destino">
                   <select v-model="localDestino" class="form-control">
-                    <option v-for="vueloDestino in localVuelosOriginal" :key="vueloDestino.id"
-                      :value="vueloDestino.destino.ciudad">{{ vueloDestino.destino.region }} </option>
+                    <option v-for="vueloDestino in localListaDestinos" :key="vueloDestino.id"
+                      :value="vueloDestino.ciudad">{{ vueloDestino.region }} </option>
                   </select>
                 </datalist>
               </div>
@@ -40,6 +62,38 @@
           </form>
         </div>
       </div>
+      <div class="row justify-content-end align-items-center">
+        <div>$ 0</div>
+        <div class="col-3">Precio
+          <b-form-input type="range" min="0" :max="localPrecioMaximo" v-model="localPrecio" 
+          step="10" class="slider"></b-form-input>
+        </div>
+        <div style="min-width: 60px;">$ {{ localPrecio }}</div>
+        <div class="col-2">
+          <b-dropdown id="dropdown-1" text="Valoracion" class="m-md-2" variant="outline-success">
+            <b-dropdown-form>
+              <b-form-group label="Estrellas:">
+                <b-form-checkbox v-for="option in options" v-model="selected" :key="option.value" :value="option.value"
+                  name="flavour-3a" @input="filtrar">
+                  {{ option.text }}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-dropdown-form>
+          </b-dropdown>
+        </div>
+        <div class="col-2">
+          <b-dropdown id="dropdown-2" text="Clase" class="m-md-2" variant="outline-success">
+            <b-dropdown-form>
+              <b-form-group label="Selecciona las clases:">
+                <b-form-checkbox v-for="clase in clases" v-model="clasesSeleccionadas" :key="clase.value"
+                  :value="clase.value" name="clases" @input="filtrar">
+                  {{ clase.text }}
+                </b-form-checkbox>
+              </b-form-group>
+            </b-dropdown-form>
+          </b-dropdown>
+        </div>
+      </div>  
     </div>
     <div v-show="localVueloAgregado" class="alert alert-success" role="alert">
       Vuelo agregado!
@@ -47,24 +101,40 @@
     <div v-show="localVueloNoAgregado" class="alert alert-danger" role="alert">
       El vuelo no ha sido agregado, por favor intente nuevamente.
     </div>
-    <div class="my-3 p-3 rounded container">
-      <div>
-        <b-card v-for="vuelo in localVuelos" :key="vuelo.id" :img-src="vuelo.link" img-alt="Image" img-top
-          class="mb-2 flight">
-          <h6>{{ vuelo.origen.ciudad }}, {{ vuelo.origen.region }}, {{ vuelo.origen.pais }} - {{ vuelo.destino.ciudad }},
-            {{ vuelo.destino.region }}, {{ vuelo.destino.pais }}</h6>
-          <h6>Fecha Ida: {{ vuelo.fechaIda | moment("DD/MM/YYYY LT") }}</h6>
-          <h6>Fecha Vuelta: {{ vuelo.fechaVuelta | moment("DD/MM/YYYY LT") }}</h6>
-          <h6>{{ vuelo.clase }}</h6>
-
-          <h6>{{ vuelo.nombreAereolinea }} - {{ vuelo.valoracionAereolinea }}</h6>
-          <h6 v-if="vuelo.conEscala">Vuelo con escalas</h6>
-          <h6 v-if="vuelo.accesoDiscapacitados">Acceso a Discapacitados</h6>
-          <h5>${{ vuelo.precio }}</h5>
-          <b-button v-if="localAllowedToAddVuelo" @click="agregarVueloAReserva(vuelo)" variant="primary">Agregar a
+    <div class="my-3 p-3 rounded container-lg">
+      <table v-show="localAplicarFiltro" aria-describedby="vueloTable" class="table">
+        <thead>
+          <tr>
+            <th>Aerolínea</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Fecha de ida</th>
+            <th>Fecha de vuelta</th>
+            <th>Clase</th>
+            <th>Con Escala</th>
+            <th>Precio</th>
+            <th>Valoración de Aerolínea</th>
+            <th v-if="localAllowedToAddVuelo" style="min-width: 185px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="vuelo in localVuelos" :key="vuelo.id">
+            <td>{{ vuelo.nombreAereolinea }}</td>
+            <td>{{ vuelo.origen.pais }}, {{ vuelo.origen.region }}, {{ vuelo.origen.ciudad }}</td>
+            <td>{{ vuelo.destino.pais }}, {{ vuelo.destino.region }}, {{ vuelo.destino.ciudad }}</td>
+            <td>{{ vuelo.fechaIda }}</td>
+            <td>{{ vuelo.fechaVuelta }}</td>
+            <td>{{ vuelo.clase }}</td>
+            <td>{{ vuelo.conEscala ? "Sí" : "No" }}</td>
+            <td>{{ vuelo.precio }}</td>
+            <td>{{ vuelo.valoracionAereolinea }}</td>
+            <td v-if="localAllowedToAddVuelo">
+              <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">Agregar a
             Reserva</b-button>
-        </b-card>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -76,6 +146,8 @@ export default {
     vuelos: null,
     origen: null,
     destino: null,
+    precio: null,
+    precioMaximo: null,
     currentDate: new Date(),
     fechaDesde: null,
     fechaHasta: null,
@@ -84,6 +156,7 @@ export default {
     ida: null,
     idaVuelta: null,
     vuelosOriginal: null,
+    listaDestinos: null,
     reservaActiva: null,
     allowedToAddVuelo: {
       type: Boolean,
@@ -96,7 +169,11 @@ export default {
     vueloNoAgregado: {
       type: Boolean,
       default: false
-    }
+    },
+    aplicarFiltro: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -114,16 +191,20 @@ export default {
         { text: 'Primera clase', value: 'Primera clase' },
         { text: 'Ejecutivo', value: 'Ejecutivo' }
       ],
+      localPrecio: this.precioMaximo,
       localOrigen: this.origen,
       localDestino: this.destino,
       localFechaDesde: this.fechaDesde,
       localFechaHasta: this.fechaHasta,
+      localPrecioMaximo: this.precioMaximo,
       localReservaActiva: this.reservaActiva,
       localAllowedToAddVuelo: this.allowedToAddVuelo,
       localVueloAgregado: this.vueloAgregado,
       localVueloNoAgregado: this.vueloNoAgregado,
       localVuelos: this.vuelos,
       localVuelosOriginal: this.vuelosOriginal,
+      localListaDestinos: this.listaDestinos,
+      localAplicarFiltro: this.aplicarFiltro,
     }
   },
   watch: {
@@ -132,6 +213,9 @@ export default {
     },
     fechaHasta(newVal) {
       this.localFechaHasta = newVal;
+    },
+    precio(newValue) {
+      this.localPrecio = newValue;
     },
     reservaActiva(newVal) {
       this.localReservaActiva = newVal;
@@ -155,10 +239,16 @@ export default {
   methods: {
     async init() {
       this.$axios
-        .get("https://localhost:57935/api/vuelo/destino/" + this.$parent.localDestino)
+        .get("https://localhost:57935/api/destino")
+        .then(response => {
+          this.localListaDestinos = response.data;
+        });
+      this.$axios
+        .get("https://localhost:57935/api/vuelo")
         .then(response => {
           this.localVuelos = response.data;
           this.localVuelosOriginal = this.localVuelos;
+          this.rangoPrecio(response.data);
         });
       if (!this.$parent.$parent.localShowReservation) {
         this.$axios
@@ -176,15 +266,57 @@ export default {
           });
       }
     },
+    rangoPrecio(vuelos) {
+      if (vuelos.length == 0) {
+        this.localPrecioMaximo = 0;
+        return;
+      }
+      this.localPrecioMaximo = vuelos[0].precio;
+      vuelos.forEach(({precio}) => {
+        if (precio > this.localPrecioMaximo) {
+          this.localPrecioMaximo = precio;
+          this.localPrecio = precio;
+        }
+      })
+    },
     filtro(vuelo) {
       return (vuelo.origen.ciudad == this.localOrigen || !this.localOrigen) && 
       (vuelo.destino.ciudad == this.localDestino || !this.localDestino) && 
       (vuelo.fechaIda.toString() >= this.localFechaDesde || !this.localFechaDesde) &&
-      (vuelo.fechaVuelta.toString() <= this.localFechaHasta || !this.localFechaHasta)
+      (vuelo.fechaVuelta.toString() <= this.localFechaHasta || !this.localFechaHasta) &&
+      ((this.idaVuelta && vuelo.fechaVuelta != null || this.idaVuelta== null ) || 
+      (!this.idaVuelta && vuelo.fechaVuelta== null) || this.idaVuelta== null ) && 
+      (vuelo.conEscala == this.escala || this.escala == null) && (vuelo.precio <= this.localPrecio)
     },
     submit() {
+      this.selected = [];
+      this.clasesSeleccionadas = [];
+      this.localAplicarFiltro = true;
       this.localVuelos = this.localVuelosOriginal;
       this.localVuelos = this.localVuelos.filter(this.filtro);
+    },
+    filtrar(){
+      this.localVuelos = this.localVuelosOriginal;
+       if(this.selected.length > 0)
+            this.filtrarPorValoracion(); 
+       if(this.clasesSeleccionadas.length > 0)
+            this.filtrarClase();
+    },
+    filtrarPorValoracion(){
+      this.localVuelos = this.localVuelos.filter(vuelo => {
+        if(this.selected.find(select => (select == vuelo.valoracionAereolinea)) != undefined)
+          return true;
+        else
+          false;
+      })
+    },
+    filtrarClase(){
+       this.localVuelos = this.localVuelos.filter(vuelo => {
+        if(this.clasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined)
+          return true;
+        else
+          false;
+      })
     },
     agregarVueloAReserva(vuelo) {
       if (this.localReservaActiva == null) {
@@ -192,7 +324,7 @@ export default {
           .post('https://localhost:57935/api/reserva', {
             nroReserva: "1",
             usuario: 1,
-            destino: this.$parent.localDestino,
+            destino: vuelo.destino.id,
             vuelo: vuelo.id,
             importe: vuelo.precio,
             reservaFinalizada: false,
@@ -295,5 +427,33 @@ export default {
   display: inline-block;
   max-width: 15rem;
   margin-right: 20px;
+}
+
+.slider {
+  width: 100%;
+  height: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.slider::-webkit-slider-runnable-track {
+  background-color: #dcdcdc;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  background-color: darkred;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.slider::-webkit-slider-thumb:active {
+  background-color: rgb(151, 60, 60);
 }
 </style>

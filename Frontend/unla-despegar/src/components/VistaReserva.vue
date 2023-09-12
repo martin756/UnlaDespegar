@@ -39,10 +39,9 @@
                   <th>Fecha Vuelta</th>
                   <th>Clase</th>
                   <th>Con Escala</th>
-                  <th>Acceso a Discapacitados</th>
-                  <th>Aereolinea</th>
+                  <th>Aereolínea</th>
                   <th>Precio</th>
-                  <th>Valoración Aereolinea</th>
+                  <th>Valoración de Aereolínea</th>
                 </tr>
               </thead>
               <tbody>
@@ -54,8 +53,7 @@
                   <td>{{ localReservaSeleccionada.vuelo.fechaIda }}</td>
                   <td>{{ localReservaSeleccionada.vuelo.fechaVuelta }}</td>
                   <td>{{ localReservaSeleccionada.vuelo.clase }}</td>
-                  <td>{{ localReservaSeleccionada.vuelo.conEscala }}</td>
-                  <td>{{ localReservaSeleccionada.vuelo.accesoDiscapacitados }}</td>
+                  <td>{{ localReservaSeleccionada.vuelo.conEscala ? "Sí" : "No" }}</td>
                   <td>{{ localReservaSeleccionada.vuelo.nombreAereolinea }}</td>
                   <td>{{ localReservaSeleccionada.vuelo.precio }}</td>
                   <td>{{ localReservaSeleccionada.vuelo.valoracionAereolinea }}</td>
@@ -463,7 +461,6 @@ export default {
 
             this.localVueloEliminado = false;
             setTimeout(() => this.localVueloEliminado = true, 2000)
-            // alert("El Vuelo no fue eliminado");
           });
     },
     eliminarPasajero(pasajero) {
@@ -477,7 +474,6 @@ export default {
 
             this.localPasajeroEliminado = false;
             setTimeout(() => this.localPasajeroEliminado = true, 2000)
-            //  alert("El Usuario no fue eliminado");
           });
     },
 
@@ -519,7 +515,6 @@ export default {
             this.localShowAgregarPasajero = false;
           })
           .catch(() => {
-            // alert("El Pasajero no fue Agregado");
             this.localPasajeroAgregado = false;
             setTimeout(() => this.localPasajeroAgregado = true, 2000)
 
@@ -527,13 +522,13 @@ export default {
 
     },
     modificarPasajero(user) {
-      (this.dni = user.dni),
-        (this.nombre = user.nombre),
-        (this.apellido = user.apellido),
-        (this.nacionalidad = user.nacionalidad),
-        (this.domicilio = user.domicilio),
-        (this.mail = user.mail),
-        (this.telefono = user.telefono);
+      (this.dni = user.dni);
+      (this.nombre = user.nombre);
+      (this.apellido = user.apellido);
+      (this.nacionalidad = user.nacionalidad);
+      (this.domicilio = user.domicilio);
+      (this.mail = user.mail);
+      (this.telefono = user.telefono);
       if (this.validar() && confirm("Desea Guardar Cambios?")) {
         this.$axios
           .put(
@@ -558,7 +553,6 @@ export default {
             this.localShowEditarPasajero = false;
           })
           .catch(() => {
-            // alert("El Pasajero no fue modificado");
             this.localPasajeroModificado = false;
             setTimeout(() => this.localPasajeroModificado = true, 2000)
           });
@@ -617,7 +611,6 @@ export default {
           }).catch(() => {
             this.localReservaEliminada = false;
             setTimeout(() => this.localReservaEliminada = true, 2000)
-            // alert("La Reserva no fue eliminada");
           });
     },
     confirmarReserva() {
@@ -648,7 +641,6 @@ export default {
           .catch(() => {
             this.localReservaConfirmada = false;
             setTimeout(() => this.localReservaConfirmada = true, 2000)
-            // alert("La Reserva no fue confirmada");
           });
 
     },
@@ -663,8 +655,6 @@ export default {
     },
     async init() {
       this.localReservaSeleccionada = this.$parent.localReserva;
-      //this.localFechaEntrada = this.localReservaSeleccionada.fechaEntrada;
-      //this.localFechaSalida = this.localReservaSeleccionada.fechaSalida;
       this.localFechaEntrada = null;
       this.localFechaSalida = null;
       if (this.localReservaSeleccionada.vuelo != null) {
@@ -758,16 +748,6 @@ export default {
   display: inline-block;
   max-width: 15rem;
   margin-right: 20px;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: darkred;
-  border-color: black;
-}
-
-.lh-condensed {
-  line-height: 1.25;
 }
 
 .btn-primary {

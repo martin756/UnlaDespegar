@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light no-print">
       <a class="navbar-brand nav-item nav-link" @click="cargaHome" href="#">UNLaDespegar</a>
       <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul id="navbar-options" class="navbar-nav ml-auto">
@@ -28,7 +28,7 @@
         </ul>
       </div>
     </nav>
-    <div class="py-5 text-center">
+    <div class="py-5 text-center no-print">
         <img class="d-block mx-auto mb-4" src="./assets/unlaLogo.jpg" alt="" width="72" height="72">  
     </div>
     <Login v-if="localShowLogin"/>
@@ -91,6 +91,10 @@ export default {
     showReserva: {
       type: Boolean,
       default: false
+    },
+    showAbonar: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -105,6 +109,7 @@ export default {
       localShowTravels: this.showTravels,
       localShowReservation: this.showReservation,
       localShowReserva: this.showReserva,
+      localShowAbonar: this.showAbonar,
     }
   },
   watch: {
@@ -137,6 +142,9 @@ export default {
     },
     showReserva(newVal) {
       this.localShowReserva = newVal;
+    },
+    showAbonar(newVal) {
+      this.localShowAbonar = newVal;
     }
   },
   methods: {
@@ -146,6 +154,7 @@ export default {
       this.localShowHome = false;
       this.localShowPerfil = false;
       this.localShowReserva = false;
+      this.localShowAbonar = false;
     },
     cargaRegistro() {
       this.localShowRegistro = true;
@@ -153,6 +162,7 @@ export default {
       this.localShowHome = false;
       this.localShowPerfil = false;
       this.localShowReserva = false;
+      this.localShowAbonar = false;
     },
     cargaHome() {
       this.localShowLogin = false;
@@ -160,6 +170,7 @@ export default {
       this.localShowHome = true;
       this.localShowPerfil = false;
       this.localShowReserva = false;
+      this.localShowAbonar = false;
       // this.$refs.home.init();
     },
     cargaMiperfil() {
@@ -168,13 +179,15 @@ export default {
       this.localShowHome = false;
       this.localShowPerfil = true;
       this.localShowReserva = false;
+      this.localShowAbonar = false;
     },
     cargaReserva(){
       this.localShowLogin = false;
       this.localShowRegistro = false;
       this.localShowHome = false;
       this.localShowPerfil = false;
-      this.localShowReserva = true; 
+      this.localShowReserva = true;
+      this.localShowAbonar = false; 
     },
     init() {
       const token = localStorage.getItem('token');
@@ -231,6 +244,11 @@ export default {
 }
 .navbar-light .navbar-nav .nav-link, .fas {
   color: white !important;
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
 </style>
 

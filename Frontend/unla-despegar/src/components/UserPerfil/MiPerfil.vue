@@ -7,9 +7,9 @@
           <button @click="cargaEditarPerfil" type="button" class="btn btn-lg btn-block btn-primary">
             Editar mis Datos
           </button>
-          <!-- <button @click="cargaMisReservas" type="button" class="btn btn-lg btn-block btn-primary">
+          <button @click="cargaMisReservas" type="button" class="btn btn-lg btn-block btn-primary">
             Mis Reservas
-          </button> -->
+          </button>
           <button @click="volver" type="button" class="btn btn-lg btn-block btn-primary">
             Volver
           </button>

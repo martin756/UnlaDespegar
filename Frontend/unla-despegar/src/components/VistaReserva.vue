@@ -26,7 +26,6 @@
         <div v-show="!localReservaConfirmada" class="alert alert-danger" role="alert">
           La Reserva no fue confirmada, por favor intente nuevamente.
         </div>
-
         <div v-if="localReservaSeleccionada.vuelo != null">
           <div class="d-flex align-items-start flex-column my-3 p-3 bg-white rounded box-shadow">
             <h2>Vuelo</h2>
@@ -62,7 +61,6 @@
             </table>
           </div>
         </div>
-
         <div class="d-flex align-items-start flex-column my-3 p-3 bg-white rounded box-shadow">
           <h2>Pasajeros</h2>
           <button v-if="localReservaSeleccionada.reservaFinalizada == false" @click="vistaAgregarPasajero()" class="btn">
@@ -83,7 +81,6 @@
               </tr>
             </thead>
             <tbody>
-
               <tr v-for="pasajero in localPasajerosSeleccionados" :key="pasajero.id">
                 <td>{{ pasajero.nombre }}</td>
                 <td>{{ pasajero.apellido }}</td>
@@ -98,7 +95,6 @@
                     <i class="fas fa-edit"></i>
                   </button>
                 </td>
-
                 <td>
                   <button v-if="localReservaSeleccionada.reservaFinalizada == false" @click="eliminarPasajero(pasajero)"
                     class="btn">
@@ -119,7 +115,6 @@
             class="btn btn-lg btn-block btn-primary">Eliminar Reserva</button>
         </div>
       </div>
-
     </div>
     <div v-if="localShowEditarPasajero">
       <div class="text-center">
@@ -131,35 +126,34 @@
                 <div>
                   <label for="dni">DNI</label>
                   <input type="text" class="form-control" id="dni" v-model="localPasajeroToEdit.dni" required />
-                  <p v-if="dniAlert" class="color-red">{{ dniMessage }}</p>
+                  <p v-if="localDniAlert" class="color-red">{{ localDniMessage }}</p>
 
                   <label for="nombre">Nombre</label>
                   <input type="text" class="form-control" id="nombre" v-model="localPasajeroToEdit.nombre" required />
-                  <p v-if="nombreAlert" class="color-red">{{ nombreMessage }}</p>
+                  <p v-if="localNombreAlert" class="color-red">{{ localNombreMessage }}</p>
 
                   <label for="apellido">Apellido</label>
                   <input type="text" class="form-control" id="apellido" v-model="localPasajeroToEdit.apellido" required />
-                  <p v-if="apellidoAlert" class="color-red">{{ apellidoMessage }}</p>
+                  <p v-if="localApellidoAlert" class="color-red">{{ localApellidoMessage }}</p>
 
                   <label for="nacionalidad">Nacionalidad</label>
                   <input type="text" class="form-control" id="nacionalidad" v-model="localPasajeroToEdit.nacionalidad"
                     required />
-                  <p v-if="nacionalidadAlert" class="color-red">{{ nacionalidadMessage }}</p>
+                  <p v-if="localNacionalidadAlert" class="color-red">{{ localNacionalidadMessage }}</p>
 
                   <label for="domicilio">Domicilio</label>
                   <input type="text" class="form-control" id="domicilio" v-model="localPasajeroToEdit.domicilio" required />
-                  <p v-if="domicilioAlert" class="color-red">{{ domicilioMessage }}</p>
+                  <p v-if="localDomicilioAlert" class="color-red">{{ localDomicilioMessage }}</p>
 
                   <label for="mail">Mail</label>
                   <input type="text" class="form-control" id="mail" v-model="localPasajeroToEdit.mail" required />
-                  <p v-if="mailAlert" class="color-red">{{ mailMessage }}</p>
+                  <p v-if="localMailAlert" class="color-red">{{ localMailMessage }}</p>
 
                   <label for="telefono">Telefono</label>
                   <input type="text" class="form-control" id="telefono" v-model="localPasajeroToEdit.telefono" required />
-                  <p v-if="telefonoAlert" class="color-red">{{ telefonoMessage }}</p>
+                  <p v-if="localTelefonoAlert" class="color-red">{{ localTelefonoMessage }}</p>
 
                   <br />
-
                 </div>
               </div>
             </form>
@@ -186,35 +180,34 @@
               <div class="row options">
                 <div>
                   <label for="dni">DNI</label>
-                  <input type="text" class="form-control" id="dni" v-model="dni" required />
-                  <p v-if="dniAlert" class="color-red">{{ dniMessage }}</p>
+                  <input type="text" class="form-control" id="dni" v-model="localDni" required />
+                  <p v-if="localDniAlert" class="color-red">{{ localDniMessage }}</p>
 
                   <label for="nombre">Nombre</label>
-                  <input type="text" class="form-control" id="nombre" v-model="nombre" required />
-                  <p v-if="nombreAlert" class="color-red">{{ nombreMessage }}</p>
+                  <input type="text" class="form-control" id="nombre" v-model="localNombre" required />
+                  <p v-if="localNombreAlert" class="color-red">{{ localNombreMessage }}</p>
 
                   <label for="apellido">Apellido</label>
-                  <input type="text" class="form-control" id="apellido" v-model="apellido" required />
-                  <p v-if="apellidoAlert" class="color-red">{{ apellidoMessage }}</p>
+                  <input type="text" class="form-control" id="apellido" v-model="localApellido" required />
+                  <p v-if="localApellidoAlert" class="color-red">{{ localApellidoMessage }}</p>
 
                   <label for="nacionalidad">Nacionalidad</label>
-                  <input type="text" class="form-control" id="nacionalidad" v-model="nacionalidad" required />
-                  <p v-if="nacionalidadAlert" class="color-red">{{ nacionalidadMessage }}</p>
+                  <input type="text" class="form-control" id="nacionalidad" v-model="localNacionalidad" required />
+                  <p v-if="localNacionalidadAlert" class="color-red">{{ localNacionalidadMessage }}</p>
 
                   <label for="domicilio">Domicilio</label>
-                  <input type="text" class="form-control" id="domicilio" v-model="domicilio" required />
-                  <p v-if="domicilioAlert" class="color-red">{{ domicilioMessage }}</p>
+                  <input type="text" class="form-control" id="domicilio" v-model="localDomicilio" required />
+                  <p v-if="localDomicilioAlert" class="color-red">{{ localDomicilioMessage }}</p>
 
                   <label for="mail">Mail</label>
-                  <input type="text" class="form-control" id="mail" v-model="mail" required />
-                  <p v-if="mailAlert" class="color-red">{{ mailMessage }}</p>
+                  <input type="text" class="form-control" id="mail" v-model="localMail" required />
+                  <p v-if="localMailAlert" class="color-red">{{ localMailMessage }}</p>
 
                   <label for="telefono">Telefono</label>
-                  <input type="text" class="form-control" id="telefono" v-model="telefono" required />
-                  <p v-if="telefonoAlert" class="color-red">{{ telefonoMessage }}</p>
+                  <input type="text" class="form-control" id="telefono" v-model="localTelefono" required />
+                  <p v-if="localTelefonoAlert" class="color-red">{{ localTelefonoMessage }}</p>
 
                   <br />
-
                 </div>
               </div>
             </form>
@@ -239,24 +232,14 @@
 export default {
   name: "VistaReserva",
   props: {
-
     reservaSeleccionada: null,
+    vuelo_id: null,
     pasajerosSeleccionados: null,
     pasajeroToEdit: null,
     fechaEntrada: null,
     fechaSalida: null,
 
-    dni: null,
-    nombre: null,
-    apellido: null,
-    mail: null,
-    nacionalidad: null,
-    telefono: null,
-    domicilio: null,
-    isValid: null,
-
     //flags errores
-
     vueloEliminado: {
       type: Boolean,
       default: true
@@ -293,44 +276,94 @@ export default {
       type: Boolean,
       default: false
     },
+
+    dni: null,
     dniAlert: {
       type: Boolean,
       default: false
     },
     dniMessage: null,
+
+    nombre: null,
     nombreAlert: {
       type: Boolean,
       default: false
     },
     nombreMessage: null,
+
+    apellido: null,
     apellidoAlert: {
       type: Boolean,
       default: false
     },
     apellidoMessage: null,
+
+    nacionalidad: null,
     nacionalidadAlert: {
       type: Boolean,
       default: false
     },
     nacionalidadMessage: null,
+
+    domicilio: null,
     domicilioAlert: {
       type: Boolean,
       default: false
     },
     domicilioMessage: null,
+
+    mail: null,
     mailAlert: {
       type: Boolean,
       default: false
     },
     mailMessage: null,
+    
+    telefono: null,
     telefonoAlert: {
       type: Boolean,
       default: false
     },
     telefonoMessage: null,
+    isValid: null,
   },
   data() {
     return {
+      localDni: this.dni,
+      localDniAlert: this.dniAlert,
+      localDniMessage: this.dniMessage,
+      
+      localNombre: this.nombre,
+      localNombreAlert: this.nombreAlert,
+      localNombreMessage: this.nombreMessage,
+      
+      localApellido: this.apellido,
+      localApellidoAlert: this.apellidoAlert,
+      localApellidoMessage: this.apellidoMessage,
+
+      localNacionalidad: this.nacionalidad,
+      localNacionalidadAlert: this.nacionalidadAlert,
+      localNacionalidadMessage: this.nacionalidadMessage,
+
+      localDomicilio: this.domicilio,
+      localDomicilioAlert: this.domicilioAlert,
+      localDomicilioMessage: this.domicilioMessage,
+      
+      localMail: this.mail,
+      localMailAlert: this.mailAlert,
+      localMailMessage: this.mailMessage,
+      
+      localPassword: this.password,
+      localContraseñaAlert: this.contraseñaAlert,
+      localContraseñaMessage: this.contraseñaMessage,
+      
+      localTelefono: this.telefono,
+      localTelefonoAlert: this.telefonoAlert,
+      localTelefonoMessage: this.telefonoMessage,
+
+      localVueloId: this.vuelo_id,
+      localIsValid: this.isValid,
+
       localReservaSeleccionada: this.reservaSeleccionada,
       localPasajerosSeleccionados: this.pasajerosSeleccionados,
       localPasajeroToEdit: this.pasajeroToEdit,
@@ -348,6 +381,33 @@ export default {
     }
   },
   watch: {
+    dni(newVal) { this.localDni = newVal; },
+    dniAlert(newVal) { this.localDniAlert = newVal; },
+    dniMessage(newVal) { this.localDniMessage = newVal; },
+    nombre(newVal) { this.localNombre = newVal; },
+    nombreAlert(newVal) { this.localNombreAlert = newVal; },
+    nombreMessage(newVal) { this.localNombreMessage = newVal; },
+    apellido(newVal) { this.localApellido = newVal; },
+    apellidoAlert(newVal) { this.localApellidoAlert = newVal; },
+    apellidoMessage(newVal) { this.localApellidoMessage = newVal; },
+    nacionalidad(newVal) { this.localNacionalidad = newVal; },
+    nacionalidadAlert(newVal) { this.localNacionalidadAlert = newVal; },
+    nacionalidadMessage(newVal) { this.localNacionalidadMessage = newVal; },
+    domicilio(newVal) { this.localDomicilio = newVal; },
+    domicilioAlert(newVal) { this.localDomicilioAlert = newVal; },
+    domicilioMessage(newVal) { this.localDomicilioMessage = newVal; },
+    mail(newVal) { this.localMail = newVal; },
+    mailAlert(newVal) { this.localMailAlert = newVal; },
+    mailMessage(newVal) { this.localMailMessage = newVal; },
+    password(newVal) { this.localPassword = newVal; },
+    contraseñaAlert(newVal) { this.localContraseñaAlert = newVal; },
+    contraseñaMessage(newVal) { this.localContraseñaMessage = newVal; },
+    telefono(newVal) { this.localTelefono = newVal; },
+    telefonoAlert(newVal) { this.localTelefonoAlert = newVal; },
+    telefonoMessage(newVal) { this.localTelefonoMessage = newVal; },
+    isValid(newVal) { this.localIsValid = newVal; },
+    vuelo_id(newVal) { this.localVueloId = newVal; },
+
     reservaSeleccionada(newVal) { this.localReservaSeleccionada = newVal; },
     pasajerosSeleccionados(newVal) { this.localPasajerosSeleccionados = newVal; },
     pasajeroToEdit(newVal) { this.localPasajeroToEdit = newVal; },
@@ -376,65 +436,30 @@ export default {
       this.localShowDetalle = true;
     },
     validar() {
-      this.isValid = true;
+      this.localIsValid = true;
 
-      if (!this.dni) {
-        this.dniMessage = "Ingrese un DNI";
-        this.dniAlert = true;
-        this.isValid = false;
-      } else {
-        this.dniAlert = false;
+      const campos = [
+        { nombre: 'localDni', message: 'Ingrese un DNI', alert: 'localDniAlert' },
+        { nombre: 'localNombre', message: 'Ingrese un nombre', alert: 'localNombreAlert' },
+        { nombre: 'localApellido', message: 'Ingrese un apellido', alert: 'localApellidoAlert' },
+        { nombre: 'localNacionalidad', message: 'Ingrese una nacionalidad', alert: 'localNacionalidadAlert' },
+        { nombre: 'localDomicilio', message: 'Ingrese un domicilio', alert: 'localDomicilioAlert' },
+        { nombre: 'localMail', message: 'Ingrese un email', alert: 'localMailAlert' },
+        { nombre: 'localPassword', message: 'Ingrese una contraseña', alert: 'localContraseñaAlert' },
+        { nombre: 'localTelefono', message: 'Ingrese un telefono', alert: 'localTelefonoAlert' }
+      ];
+
+      for (const campo of campos) {
+        if (!this[campo.nombre]) {
+          this[campo.alert] = true;
+          this[campo.nombre + 'Message'] = campo.message;
+          this.localIsValid = false;
+        } else {
+          this[campo.alert] = false;
+        }
       }
 
-      if (!this.nombre) {
-        this.nombreMessage = "Ingrese un nombre";
-        this.nombreAlert = true;
-        this.isValid = false;
-      } else {
-        this.nombreAlert = false;
-      }
-
-      if (!this.apellido) {
-        this.apellidoMessage = "Ingrese un apellido";
-        this.apellidoAlert = true;
-        this.isValid = false;
-      } else {
-        this.apellidoAlert = false;
-      }
-
-      if (!this.nacionalidad) {
-        this.nacionalidadMessage = "Ingrese una nacionalidad";
-        this.nacionalidadAlert = true;
-        this.isValid = false;
-      } else {
-        this.nacionalidadAlert = false;
-      }
-
-      if (!this.domicilio) {
-        this.domicilioMessage = "Ingrese un domicilio";
-        this.domicilioAlert = true;
-        this.isValid = false;
-      } else {
-        this.domicilioAlert = false;
-      }
-
-      if (!this.mail) {
-        this.mailMessage = "Ingrese un email";
-        this.mailAlert = true;
-        this.isValid = false;
-      } else {
-        this.mailAlert = false;
-      }
-
-      if (!this.telefono) {
-        this.telefonoMessage = "Ingrese un telefono";
-        this.telefonoAlert = true;
-        this.isValid = false;
-      } else {
-        this.telefonoAlert = false;
-      }
-
-      return this.isValid;
+      return this.localIsValid;
     },
     eliminarVuelo() {
       if (confirm("Desea eliminar este vuelo?"))
@@ -450,7 +475,6 @@ export default {
               vuelo: null,
               importe: this.localReservaSeleccionada.importe,
               pasajeros: this.localReservaSeleccionada.pasajeros,
-
               reservaFinalizada: this.localReservaSeleccionada.reservaFinalizada
             }
           )
@@ -458,7 +482,6 @@ export default {
             this.actualizar();
           })
           .catch(() => {
-
             this.localVueloEliminado = false;
             setTimeout(() => this.localVueloEliminado = true, 2000)
           });
@@ -476,37 +499,29 @@ export default {
             setTimeout(() => this.localPasajeroEliminado = true, 2000)
           });
     },
-
     vistaModificarPasajero(pasajero) {
       this.localPasajeroToEdit = pasajero;
-      this.showList = false;
       this.localShowDetalle = false;
       this.localShowEditarPasajero = true;
     },
     vistaAgregarPasajero() {
-
-      this.showList = false;
       this.localShowDetalle = false;
       this.localShowAgregarPasajero = true;
     },
-
     agregarPasajero() {
       if (this.validar() && confirm("Desea Guardar Cambios?"))
         this.$axios
           .post(
             "https://localhost:57935/api/pasajero",
-
             {
-
-              nombre: this.nombre,
-              apellido: this.apellido,
-              dni: this.dni,
-              domicilio: this.domicilio,
-              mail: this.mail,
-              nacionalidad: this.nacionalidad,
+              nombre: this.localNombre,
+              apellido: this.localApellido,
+              dni: this.localDni,
+              domicilio: this.localDomicilio,
+              mail: this.localMail,
+              nacionalidad: this.localNacionalidad,
               reserva: this.localReservaSeleccionada.id,
-              telefono: this.telefono,
-
+              telefono: this.localTelefono,
             }
           )
           .then(() => {
@@ -522,13 +537,13 @@ export default {
 
     },
     modificarPasajero(user) {
-      (this.dni = user.dni);
-      (this.nombre = user.nombre);
-      (this.apellido = user.apellido);
-      (this.nacionalidad = user.nacionalidad);
-      (this.domicilio = user.domicilio);
-      (this.mail = user.mail);
-      (this.telefono = user.telefono);
+      this.localDni = user.dni;
+      this.localNombre = user.nombre;
+      this.localApellido = user.apellido;
+      this.localNacionalidad = user.nacionalidad;
+      this.localDomicilio = user.domicilio;
+      this.localMail = user.mail;
+      this.localTelefono = user.telefono;
       if (this.validar() && confirm("Desea Guardar Cambios?")) {
         this.$axios
           .put(
@@ -567,12 +582,11 @@ export default {
             nroReserva: this.localReservaSeleccionada.nroReserva,
             usuario: this.localReservaSeleccionada.usuario.id,
             destino: this.localReservaSeleccionada.destino.id,
-            vuelo: this.vuelo_id,
+            vuelo: this.localVueloId,
             importe: this.localReservaSeleccionada.importe,
             pasajeros: this.localReservaSeleccionada.pasajeros,
             fechaEntrada: this.localFechaEntrada,
             fechaSalida: this.localFechaSalida,
-
             reservaFinalizada: false
           }
         )
@@ -591,9 +605,9 @@ export default {
         .then(response => {
           this.localReservaSeleccionada = response.data;
           if (this.localReservaSeleccionada.vuelo != null) {
-            this.vuelo_id = this.localReservaSeleccionada.vuelo.id;
+            this.localVueloId = this.localReservaSeleccionada.vuelo.id;
           } else {
-            this.vuelo_id = null;
+            this.localVueloId = null;
           }
 
           this.localPasajerosSeleccionados = this.localReservaSeleccionada.pasajeros;
@@ -623,7 +637,7 @@ export default {
               nroReserva: this.localReservaSeleccionada.nroReserva,
               usuario: this.localReservaSeleccionada.usuario.id,
               destino: this.localReservaSeleccionada.destino.id,
-              vuelo: this.vuelo_id,
+              vuelo: this.localVueloId,
               importe: this.localReservaSeleccionada.importe,
               pasajeros: this.localReservaSeleccionada.pasajeros,
               fechaEntrada: this.localFechaEntrada,
@@ -632,17 +646,14 @@ export default {
             }
           )
           .then(() => {
-
             this.$parent.localReserva = null;
             this.$parent.localShowReservation = false;
             this.$parent.cargaHome();
-
           })
           .catch(() => {
             this.localReservaConfirmada = false;
             setTimeout(() => this.localReservaConfirmada = true, 2000)
           });
-
     },
     isTrue(bool) {
       this.resultado = false;
@@ -658,9 +669,9 @@ export default {
       this.localFechaEntrada = null;
       this.localFechaSalida = null;
       if (this.localReservaSeleccionada.vuelo != null) {
-        this.vuelo_id = this.localReservaSeleccionada.vuelo.id;
+        this.localVueloId = this.localReservaSeleccionada.vuelo.id;
       } else {
-        this.vuelo_id = null;
+        this.localVueloId = null;
       }
 
       this.localPasajerosSeleccionados = this.localReservaSeleccionada.pasajeros;
@@ -669,9 +680,7 @@ export default {
         this.$axios
           .post(
             "https://localhost:57935/api/pasajero",
-
             {
-
               nombre: this.localReservaSeleccionada.usuario.nombre,
               apellido: this.localReservaSeleccionada.usuario.apellido,
               dni: this.localReservaSeleccionada.usuario.dni,
@@ -680,12 +689,10 @@ export default {
               nacionalidad: this.localReservaSeleccionada.usuario.nacionalidad,
               reserva: this.localReservaSeleccionada.id,
               telefono: this.localReservaSeleccionada.usuario.telefono,
-
             }
           )
           .then(() => {
             this.actualizar();
-
           })
       }
       this.actualizar();

@@ -6,22 +6,22 @@
           <form>
             <div class="form-row p-2">
               <div class="col">
-                <input class="form-check-input" type="radio" v-model="idaVuelta" :value="true" name="inlineRadioOptions"
+                <input class="form-check-input" type="radio" v-model="localIdaVuelta" :value="true" name="inlineRadioOptions"
                   id="inlineRadio1">
                 <label class="form-check-label" for="inlineRadio1" style="color:white;">Ida y vuelta</label>
               </div>
               <div class="col">
-                <input class="form-check-input" type="radio" v-model="idaVuelta" :value="false" name="inlineRadioOptions"
+                <input class="form-check-input" type="radio" v-model="localIdaVuelta" :value="false" name="inlineRadioOptions"
                   id="inlineRadio2">
                 <label class="form-check-label" for="inlineRadio2" style="color:white;">Ida</label>
               </div>
               <div class="col">
-                <input class="form-check-input" type="radio" v-model="escala" :value="false" name="escalaOptions"
+                <input class="form-check-input" type="radio" v-model="localEscala" :value="false" name="escalaOptions"
                   id="escalaRadio1">
                 <label class="form-check-label" for="escalaRadio1" style="color:white;">Directo</label>
               </div>
               <div class="col">
-                <input class="form-check-input" type="radio" v-model="escala" :value="true" name="escalaOptions"
+                <input class="form-check-input" type="radio" v-model="localEscala" :value="true" name="escalaOptions"
                   id="escalaRadio2">
                 <label class="form-check-label" for="escalaRadio2" style="color:white;">Con escala</label>
               </div>
@@ -119,18 +119,19 @@
         </thead>
         <tbody>
           <tr v-for="vuelo in localVuelos" :key="vuelo.id">
-            <td>{{ vuelo.nombreAereolinea }}</td>
+            <td><img :src="vuelo.link" alt="icon"/> {{ vuelo.nombreAereolinea }}</td>
             <td>{{ vuelo.origen.pais }}, {{ vuelo.origen.region }}, {{ vuelo.origen.ciudad }}</td>
             <td>{{ vuelo.destino.pais }}, {{ vuelo.destino.region }}, {{ vuelo.destino.ciudad }}</td>
-            <td>{{ vuelo.fechaIda }}</td>
-            <td>{{ vuelo.fechaVuelta }}</td>
+            <td>{{ new Date(vuelo.fechaIda).toLocaleString() }}</td>
+            <td>{{ new Date(vuelo.fechaVuelta).toLocaleString() }}</td>
             <td>{{ vuelo.clase }}</td>
             <td>{{ vuelo.conEscala ? "Sí" : "No" }}</td>
             <td>{{ vuelo.precio }}</td>
             <td>{{ vuelo.valoracionAereolinea }}</td>
             <td v-if="localAllowedToAddVuelo">
-              <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">Agregar a
-            Reserva</b-button>
+              <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">
+                Agregar a Reserva
+              </b-button>
             </td>
           </tr>
         </tbody>
@@ -156,6 +157,7 @@ export default {
     ida: null,
     idaVuelta: null,
     vuelosOriginal: null,
+    vuelosConValoracionYClase: null,
     listaDestinos: null,
     reservaActiva: null,
     allowedToAddVuelo: {
@@ -188,7 +190,7 @@ export default {
       clasesSeleccionadas: [],
       clases: [
         { text: 'Economica', value: 'Económica' },
-        { text: 'Primera clase', value: 'Primera clase' },
+        { text: 'Primera clase', value: 'Primera Clase' },
         { text: 'Ejecutivo', value: 'Ejecutivo' }
       ],
       localPrecio: this.precioMaximo,
@@ -196,6 +198,8 @@ export default {
       localDestino: this.destino,
       localFechaDesde: this.fechaDesde,
       localFechaHasta: this.fechaHasta,
+      localIdaVuelta: this.idaVuelta,
+      localEscala: this.escala,
       localPrecioMaximo: this.precioMaximo,
       localReservaActiva: this.reservaActiva,
       localAllowedToAddVuelo: this.allowedToAddVuelo,
@@ -203,6 +207,7 @@ export default {
       localVueloNoAgregado: this.vueloNoAgregado,
       localVuelos: this.vuelos,
       localVuelosOriginal: this.vuelosOriginal,
+      localVuelosConValoracionYClase: this.vuelosConValoracionYClase,
       localListaDestinos: this.listaDestinos,
       localAplicarFiltro: this.aplicarFiltro,
     }
@@ -214,8 +219,14 @@ export default {
     fechaHasta(newVal) {
       this.localFechaHasta = newVal;
     },
-    precio(newValue) {
-      this.localPrecio = newValue;
+    precio(newVal) {
+      this.localPrecio = newVal;
+    },
+    idaVuelta(newVal) {
+      this.localIdaVuelta = newVal;
+    },
+    escala(newVal) {
+      this.localEscala = newVal;
     },
     reservaActiva(newVal) {
       this.localReservaActiva = newVal;
@@ -235,6 +246,9 @@ export default {
     vuelosOriginal (newVal) {
       this.localVuelosOriginal = newVal;
     },
+    vuelosConValoracionYClase(newVal) {
+      this.localVuelosConValoracionYClase = newVal;
+    }
   },
   methods: {
     async init() {
@@ -250,16 +264,22 @@ export default {
           this.localVuelosOriginal = this.localVuelos;
           this.rangoPrecio(response.data);
         });
-      if (!this.$parent.$parent.localShowReservation) {
+      if (this.$parent.$parent.localUsuario) {
         this.$axios
-          .get("https://localhost:57935/api/reserva/usuario/" + 1)
+          .get("https://localhost:57935/api/reserva/usuario/" + this.$parent.$parent.localUsuario.Id)
           .then(response => {
             this.localAllowedToAddVuelo = true;
             if (response.data.filter(function (reserva) { return !reserva.reservaFinalizada; }).length > 0) {
               this.localReservaActiva = response.data.filter(function (reserva) { return !reserva.reservaFinalizada; })[0];
               this.$parent.$parent.localShowReservation = true;
               this.$parent.$parent.localReserva = this.localReservaActiva;
-              if (this.localReservaActiva.vuelo != null) {
+              if(this.localReservaActiva.alojamiento != null){
+                this.localReservaActiva.alojamiento = this.localReservaActiva.alojamiento.id;
+              }
+              if(this.localReservaActiva.actividad != null){
+                this.localReservaActiva.actividad = this.localReservaActiva.actividad.id;
+              }
+              if (this.localReservaActiva.vuelo != null || this.localReservaActiva.esUnPaquete) {
                 this.localAllowedToAddVuelo = false;
               }
             }
@@ -279,24 +299,24 @@ export default {
         }
       })
     },
+    submit() {
+      this.localAplicarFiltro = true;
+      this.localVuelos = this.localVuelosOriginal;
+      this.localVuelos = this.localVuelos.filter(this.filtro);
+      this.localVuelosConValoracionYClase = this.localVuelos;
+    },
     filtro(vuelo) {
       return (vuelo.origen.ciudad == this.localOrigen || !this.localOrigen) && 
       (vuelo.destino.ciudad == this.localDestino || !this.localDestino) && 
       (vuelo.fechaIda.toString() >= this.localFechaDesde || !this.localFechaDesde) &&
       (vuelo.fechaVuelta.toString() <= this.localFechaHasta || !this.localFechaHasta) &&
-      ((this.idaVuelta && vuelo.fechaVuelta != null || this.idaVuelta== null ) || 
-      (!this.idaVuelta && vuelo.fechaVuelta== null) || this.idaVuelta== null ) && 
-      (vuelo.conEscala == this.escala || this.escala == null) && (vuelo.precio <= this.localPrecio)
-    },
-    submit() {
-      this.selected = [];
-      this.clasesSeleccionadas = [];
-      this.localAplicarFiltro = true;
-      this.localVuelos = this.localVuelosOriginal;
-      this.localVuelos = this.localVuelos.filter(this.filtro);
+      ((this.localIdaVuelta && vuelo.fechaVuelta != null || this.localIdaVuelta == null ) || 
+      (!this.localIdaVuelta && vuelo.fechaVuelta == null) || this.localIdaVuelta == null ) && 
+      (vuelo.conEscala == this.localEscala || this.localEscala == null) && (vuelo.precio <= this.localPrecio)
     },
     filtrar(){
-      this.localVuelos = this.localVuelosOriginal;
+      this.localVuelos = this.localVuelosConValoracionYClase;
+      // this.localVuelos = this.localVuelosOriginal;
        if(this.selected.length > 0)
             this.filtrarPorValoracion(); 
        if(this.clasesSeleccionadas.length > 0)
@@ -304,18 +324,12 @@ export default {
     },
     filtrarPorValoracion(){
       this.localVuelos = this.localVuelos.filter(vuelo => {
-        if(this.selected.find(select => (select == vuelo.valoracionAereolinea)) != undefined)
-          return true;
-        else
-          false;
+        return this.selected.find(select => (select == vuelo.valoracionAereolinea)) != undefined;
       })
     },
     filtrarClase(){
        this.localVuelos = this.localVuelos.filter(vuelo => {
-        if(this.clasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined)
-          return true;
-        else
-          false;
+        return this.clasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined;
       })
     },
     agregarVueloAReserva(vuelo) {
@@ -323,7 +337,7 @@ export default {
         this.$axios
           .post('https://localhost:57935/api/reserva', {
             nroReserva: "1",
-            usuario: 1,
+            usuario: this.$parent.$parent.localUsuario.Id,
             destino: vuelo.destino.id,
             vuelo: vuelo.id,
             importe: vuelo.precio,

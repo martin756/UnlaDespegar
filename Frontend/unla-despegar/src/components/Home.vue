@@ -1,6 +1,6 @@
 <template>
  <div>
-    <VistaVuelo v-if="localShowVuelos"/>
+    <VistaVuelo ref="vuelo"/>
  </div>
 </template>
 
@@ -19,10 +19,6 @@ export default {
       type: Boolean,
       default: false
     },
-    showVuelos: {
-      type: Boolean,
-      default: true
-    },
     current_destino: null
   },
   data() {
@@ -30,7 +26,6 @@ export default {
       localDestinos: this.destinos,
       localDestino: this.destino,
       localActiveSearch: this.activeSearch,
-      localShowVuelos: this.showVuelos,
       localCurrentDestino: this.current_destino,
     }
   },
@@ -44,9 +39,6 @@ export default {
     activeSearch(newVal) {
       this.localActiveSearch = newVal;
     },
-    showVuelos(newVal) {
-      this.localShowVuelos = newVal;
-    },
     current_destino(newVal) {
       this.localCurrentDestino = newVal;
     }
@@ -56,14 +48,9 @@ export default {
     },
     search(){
       this.localActiveSearch = true;
-      // this.localShowVuelos = true;
       this.localCurrentDestino = this.localDestinos[this.localDestino-1].ciudad +", " + this.localDestinos[this.localDestino-1].region + ", " + this.localDestinos[this.localDestino-1].pais
     },
-    cargaVuelos(){
-      // this.localShowVuelos = true;
-    },
     cargaDestinos(){
-      // this.localShowVuelos = false;
       this.localActiveSearch = false;
     }
   },

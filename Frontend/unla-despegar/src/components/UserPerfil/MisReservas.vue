@@ -65,9 +65,9 @@
                     <th>Fecha Vuelta</th>
                     <th>Clase</th>
                     <th>Con Escala</th>
-                    <th>Aereolinea</th>
+                    <th>Aerolinea</th>
                     <th>Precio</th>
-                    <th>Valoración Aereolinea</th>
+                    <th>Valoración Aerolinea</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -80,9 +80,9 @@
                     <td>{{ new Date(localReservaSeleccionada.vuelo.fechaVuelta).toLocaleString() }}</td>
                     <td>{{ localReservaSeleccionada.vuelo.clase }}</td>
                     <td>{{ localReservaSeleccionada.vuelo.conEscala ? "Sí" : "No" }}</td>
-                    <td>{{ localReservaSeleccionada.vuelo.nombreAereolinea }}</td>
+                    <td>{{ localReservaSeleccionada.vuelo.nombreAerolinea }}</td>
                     <td>{{ localReservaSeleccionada.vuelo.precio }}</td>
-                    <td>{{ localReservaSeleccionada.vuelo.valoracionAereolinea }}</td>
+                    <td>{{ localReservaSeleccionada.vuelo.valoracionAerolinea }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -136,8 +136,8 @@
         <div class="row">
           <div class="options text-center">
             <button @click="listaReservas" type="button" class="btn btn-lg btn-block btn-primary">Volver</button>
-            <!-- <button v-if="localReservaSeleccionada.reservaFinalizada" @click="imprimirReserva" type="button"
-              class="btn btn-lg btn-block btn-primary">Imprimir Reserva</button> -->
+            <button v-if="localReservaSeleccionada.reservaFinalizada" @click="imprimirReserva" type="button"
+              class="btn btn-lg btn-block btn-primary">Imprimir Reserva</button>
             <button v-if="!localReservaSeleccionada.reservaFinalizada" @click="vistaAbonarReserva" type="button"
               class="btn btn-lg btn-block btn-primary">Ir a Abonar Reserva</button>
             <button v-if="!localReservaSeleccionada.reservaFinalizada" @click="eliminarReserva" type="button"

@@ -3,43 +3,43 @@
     <h4 class="mb-3">Editar Usuario</h4>
     <div class="row">
       <div class="options text-center">
-        <form class="needs-validation" novalidate>
+        <form class="needs-validation" novalidate ref="editarForm" @submit.prevent="submit">
           <div class="row options">
             <div>
               <label for="dni">DNI</label>
               <input type="number" min="1" class="form-control" id="dni" v-model="localDni" required />
-              <div v-if="localDniAlert" class="alert alert-danger" role="alert">{{ localDniMessage }}</div>
+              <div class="invalid-feedback">Ingrese su DNI</div>
 
               <label for="nombre">Nombre</label>
               <input type="text" class="form-control" id="nombre" v-model="localNombre" required />
-              <div v-if="localNombreAlert" class="alert alert-danger" role="alert">{{ localNombreMessage }}</div>
+              <div class="invalid-feedback">Ingrese su nombre</div>
 
               <label for="apellido">Apellido</label>
               <input type="text" class="form-control" id="apellido" v-model="localApellido" required />
-              <div v-if="localApellidoAlert" class="alert alert-danger" role="alert">{{ localApellidoMessage }}</div>
+              <div class="invalid-feedback">Ingrese su apellido</div>
 
               <label for="nacionalidad">Nacionalidad</label>
               <input type="text" class="form-control" id="nacionalidad" v-model="localNacionalidad" required />
-              <div v-if="localNacionalidadAlert" class="alert alert-danger" role="alert">{{ localNacionalidadMessage }}</div>
+              <div class="invalid-feedback">Ingrese su nacionalidad</div>
 
               <label for="domicilio">Domicilio</label>
               <input type="text" class="form-control" id="domicilio" v-model="localDomicilio" required />
-              <div v-if="localDomicilioAlert" class="alert alert-danger" role="alert">{{ localDomicilioMessage }}</div>
+              <div class="invalid-feedback">Ingrese su domicilio</div>
 
               <label for="mail">Mail</label>
               <input type="text" class="form-control" id="mail" v-model="localMail" required />
-              <div v-if="localMailAlert" class="alert alert-danger" role="alert">{{ localMailMessage }}</div>
+              <div class="invalid-feedback">Ingrese un mail</div>
 
               <label for="password">Contraseña</label>
               <input type="password" class="form-control" id="password" v-model="localPassword" required />
-              <div v-if="localPasswordAlert" class="alert alert-danger" role="alert">{{ localPasswordMessage }}</div>
+              <div class="invalid-feedback">Ingrese una contraseña</div>
 
-              <label for="telefono">Telefono</label>
+              <label for="telefono">Teléfono</label>
               <input type="text" class="form-control" id="telefono" v-model="localTelefono" required />
-              <div v-if="localTelefonoAlert" class="alert alert-danger" role="alert">{{ localTelefonoMessage }}</div>
+              <div class="invalid-feedback">Ingrese un teléfono de contacto</div>
 
               <br />
-              <button @click="submit" type="button" class="btn btn-lg btn-block btn-success options button-submit">
+              <button type="submit" class="btn btn-lg btn-block btn-success options button-submit">
                 Guardar Cambios
               </button>
             </div>
@@ -73,67 +73,19 @@ export default {
     },
 
     dni: null,
-    dniAlert: {
-      type: Boolean,
-      default: false
-    },
-    dniMessage: null,
-
     nombre: null,
-    nombreAlert: {
-      type: Boolean,
-      default: false
-    },
-    nombreMessage: null,
-
     apellido: null,
-    apellidoAlert: {
-      type: Boolean,
-      default: false
-    },
-    apellidoMessage: null,
-
     nacionalidad: null,
-    nacionalidadAlert: {
-      type: Boolean,
-      default: false
-    },
-    nacionalidadMessage: null,
-
     domicilio: null,
-    domicilioAlert: {
-      type: Boolean,
-      default: false
-    },
-    domicilioMessage: null,
-
     mail: null,
-    mailAlert: {
-      type: Boolean,
-      default: false
-    },
-    mailMessage: null,
-
     password: null,
-    passwordAlert: {
-      type: Boolean,
-      default: false
-    },
-    passwordMessage: null,
-
     telefono: null,
-    telefonoAlert: {
-      type: Boolean,
-      default: false
-    },
-    telefonoMessage: null,
 
     current_user: null,
     user_to_modify_id: {
       type: Number,
       default: 0
     },
-    isValid: null
   },
   data() {
     return {
@@ -141,40 +93,16 @@ export default {
       localEditElement: this.editElement,
 
       localDni: this.dni,
-      localDniAlert: this.dniAlert,
-      localDniMessage: this.dniMessage,
-      
       localNombre: this.nombre,
-      localNombreAlert: this.nombreAlert,
-      localNombreMessage: this.nombreMessage,
-      
       localApellido: this.apellido,
-      localApellidoAlert: this.apellidoAlert,
-      localApellidoMessage: this.apellidoMessage,
-
       localNacionalidad: this.nacionalidad,
-      localNacionalidadAlert: this.nacionalidadAlert,
-      localNacionalidadMessage: this.nacionalidadMessage,
-
       localDomicilio: this.domicilio,
-      localDomicilioAlert: this.domicilioAlert,
-      localDomicilioMessage: this.domicilioMessage,
-      
       localMail: this.mail,
-      localMailAlert: this.mailAlert,
-      localMailMessage: this.mailMessage,
-      
       localPassword: this.password,
-      localPasswordAlert: this.passwordAlert,
-      localPasswordMessage: this.passwordMessage,
-      
       localTelefono: this.telefono,
-      localTelefonoAlert: this.telefonoAlert,
-      localTelefonoMessage: this.telefonoMessage,
 
       localCurrentUser: this.current_user,
       localUserToModifyId: this.user_to_modify_id,
-      localIsValid: this.isValid
     };
   },
   watch: {
@@ -182,33 +110,16 @@ export default {
     editElement(newVal) { this.localEditElement = newVal; },
 
     dni(newVal) { this.localDni = newVal; },
-    dniAlert(newVal) { this.localDniAlert = newVal; },
-    dniMessage(newVal) { this.localDniMessage = newVal; },
     nombre(newVal) { this.localNombre = newVal; },
-    nombreAlert(newVal) { this.localNombreAlert = newVal; },
-    nombreMessage(newVal) { this.localNombreMessage = newVal; },
     apellido(newVal) { this.localApellido = newVal; },
-    apellidoAlert(newVal) { this.localApellidoAlert = newVal; },
-    apellidoMessage(newVal) { this.localApellidoMessage = newVal; },
     nacionalidad(newVal) { this.localNacionalidad = newVal; },
-    nacionalidadAlert(newVal) { this.localNacionalidadAlert = newVal; },
-    nacionalidadMessage(newVal) { this.localNacionalidadMessage = newVal; },
     domicilio(newVal) { this.localDomicilio = newVal; },
-    domicilioAlert(newVal) { this.localDomicilioAlert = newVal; },
-    domicilioMessage(newVal) { this.localDomicilioMessage = newVal; },
     mail(newVal) { this.localMail = newVal; },
-    mailAlert(newVal) { this.localMailAlert = newVal; },
-    mailMessage(newVal) { this.localMailMessage = newVal; },
     password(newVal) { this.localPassword = newVal; },
-    passwordAlert(newVal) { this.localPasswordAlert = newVal; },
-    passwordMessage(newVal) { this.localPasswordMessage = newVal; },
     telefono(newVal) { this.localTelefono = newVal; },
-    telefonoAlert(newVal) { this.localTelefonoAlert = newVal; },
-    telefonoMessage(newVal) { this.localTelefonoMessage = newVal; },
 
     current_user(newVal) { this.localCurrentUser = newVal; },
     user_to_modify_id(newVal) { this.localUserToModifyId = newVal; },
-    isValid(newVal) { this.localIsValid = newVal; },
   },
   methods: {
     volver() {
@@ -225,32 +136,6 @@ export default {
       this.localTelefono = this.$parent.localCurrentUser[0].telefono;
       this.localUserToModifyId = this.$parent.localCurrentUser[0].id;
     },
-    validar() {
-      this.localIsValid = true;
-
-      const campos = [
-        { nombre: 'localDni', message: 'Ingrese un DNI', alert: 'localDniAlert' },
-        { nombre: 'localNombre', message: 'Ingrese un nombre', alert: 'localNombreAlert' },
-        { nombre: 'localApellido', message: 'Ingrese un apellido', alert: 'localApellidoAlert' },
-        { nombre: 'localNacionalidad', message: 'Ingrese una nacionalidad', alert: 'localNacionalidadAlert' },
-        { nombre: 'localDomicilio', message: 'Ingrese un domicilio', alert: 'localDomicilioAlert' },
-        { nombre: 'localMail', message: 'Ingrese un email', alert: 'localMailAlert' },
-        { nombre: 'localPassword', message: 'Ingrese una contraseña', alert: 'localPasswordAlert' },
-        { nombre: 'localTelefono', message: 'Ingrese un telefono', alert: 'localTelefonoAlert' }
-      ];
-
-      for (const campo of campos) {
-        if (!this[campo.nombre]) {
-          this[campo.alert] = true;
-          this[campo.nombre + 'Message'] = campo.message;
-          this.localIsValid = false;
-        } else {
-          this[campo.alert] = false;
-        }
-      }
-
-      return this.localIsValid;
-    },
     actualizarDatos() {
       this.$parent.localCurrentUser[0].dni = this.localDni;
       this.$parent.localCurrentUser[0].nombre = this.localNombre;
@@ -264,24 +149,27 @@ export default {
       this.$parent.cargaMenu();
     },
     submit() {
-      if (this.validar()) {
-        this.$axios
-          .put(
-            "https://localhost:57935/api/usuario/" + this.localUserToModifyId,
-            {
-              id: this.localUserToModifyId,
-              dni: this.localDni,
-              nombre: this.localNombre,
-              apellido: this.localApellido,
-              nacionalidad: this.localNacionalidad,
-              domicilio: this.localDomicilio,
-              mail: this.localMail,
-              contraseña: this.localPassword,
-              telefono: this.localTelefono
-            }
-          )
-          .then(() => this.actualizarDatos());
+      const form = this.$refs.editarForm;
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
       }
+      this.$axios
+        .put(
+          "https://localhost:57935/api/usuario/" + this.localUserToModifyId,
+          {
+            id: this.localUserToModifyId,
+            dni: this.localDni,
+            nombre: this.localNombre,
+            apellido: this.localApellido,
+            nacionalidad: this.localNacionalidad,
+            domicilio: this.localDomicilio,
+            mail: this.localMail,
+            contraseña: this.localPassword,
+            telefono: this.localTelefono
+          }
+        )
+        .then(() => this.actualizarDatos());
     },
     init() {
       this.cargaEdit();

@@ -88,5 +88,32 @@ namespace UnlaDespegar.Controllers
             }
             return responseLogin;
         }
+
+        [HttpPut]
+        [Route("[action]")]
+        public ActionResult UpdatePassword([FromBody]UsuarioDto user)
+        {
+            try
+            {
+                Usuario usuario = context.Usuario.FirstOrDefault(u => u.Mail == user.Mail);
+
+                if (usuario != null)
+                {
+                    usuario.Contraseña = user.Password;
+                    context.Entry(usuario).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else 
+                { 
+                    return NotFound(); 
+                }
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

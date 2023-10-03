@@ -18,9 +18,9 @@ namespace UnlaDespegar.MappingProfiles
             .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.Id))
             .ForMember(dest => dest.FechaIda, opts => opts.MapFrom(src => src.FechaIda))
             .ForMember(dest => dest.FechaVuelta, opts => opts.MapFrom(src => src.FechaVuelta))
-            .ForMember(dest => dest.NombreAereolinea, opts => opts.MapFrom(src => src.NombreAereolinea))
+            .ForMember(dest => dest.NombreAerolinea, opts => opts.MapFrom(src => src.NombreAerolinea))
             .ForMember(dest => dest.IdaVuelta, opts => opts.MapFrom(src => src.IdaVuelta))
-            .ForMember(dest => dest.ValoracionAereolinea, opts => opts.MapFrom(src => src.ValoracionAereolinea))
+            .ForMember(dest => dest.ValoracionAerolinea, opts => opts.MapFrom(src => src.ValoracionAerolinea))
             .ForMember(dest => dest.Clase, opts => opts.MapFrom(src => src.Clase))
             .ForMember(dest => dest.ConEscala, opts => opts.MapFrom(src => src.ConEscala))
             .ForMember(dest => dest.AccesoDiscapacitados, opts => opts.MapFrom(src => src.AccesoDiscapacitados))
@@ -88,11 +88,11 @@ namespace UnlaDespegar.MappingProfiles
                 AccesoDiscapacitados = src.VueloNavigation.AccesoDiscapacitados,
                 FechaVuelta = src.VueloNavigation.FechaVuelta,
                 FechaIda = src.VueloNavigation.FechaIda,
-                NombreAereolinea = src.VueloNavigation.NombreAereolinea,
+                NombreAerolinea = src.VueloNavigation.NombreAerolinea,
                 Clase = src.VueloNavigation.Clase,
                 ConEscala = src.VueloNavigation.ConEscala,
                 IdaVuelta = src.VueloNavigation.IdaVuelta,
-                ValoracionAereolinea = src.VueloNavigation.ValoracionAereolinea,
+                ValoracionAerolinea = src.VueloNavigation.ValoracionAerolinea,
                 Precio = src.VueloNavigation.Precio,
                 Link = src.VueloNavigation.Link,
                 Destino = new DestinoResponse

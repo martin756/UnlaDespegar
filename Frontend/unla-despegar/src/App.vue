@@ -7,18 +7,12 @@
           <li class="nav-item" v-if="localShowTravels">
             <a class="nav-link" v-if="localUserLogged" @click="cargaMiperfil" href="#"><i class="fas fa-user-alt"></i> {{localUsuario.Nombre}} {{localUsuario.Apellido}}</a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" @click="cargaHome" href="#"><i class="fas fa-home"></i> Home</a>
-          </li> -->
           <li class="nav-item">
             <a class="nav-link" @click="cargaLogin" v-if="!localUserLogged" href="#"><i class="fas fa-user-friends"></i> Iniciar Sesión</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" @click="cargaRegistro" v-if="!localUserLogged" href="#"><i class="fas fa-envelope"></i> Registrarse</a>
           </li>
-          <!-- <li class="nav-item" v-if="localShowTravels">
-            <a class="nav-link" @click="cargaMiperfil" href="#"><i class="fas fa-user-alt"></i> Mi Perfil</a>
-          </li> -->
           <li class="nav-item" v-if="localShowReservation">
             <a class="nav-link" @click="cargaReserva" href="#"><i class="fas fa-umbrella-beach"></i> Ver Reserva</a>
           </li>
@@ -197,13 +191,13 @@ export default {
         this.cargaHome();
         this.localShowTravels = true;
         this.$axios
-        .get("https://localhost:57935/api/reserva/usuario/" + this.localUsuario.Id)
-        .then(response => {
-          if(response.data.filter(function(reserva) {return !reserva.reservaFinalizada;}).length > 0){
-            this.localReserva = response.data.filter(function(reserva) {return !reserva.reservaFinalizada;})[0];
-            this.localShowReservation = true;
-          }
-        });
+          .get("https://localhost:57935/api/reserva/usuario/" + this.localUsuario.Id)
+          .then(response => {
+            if(response.data.filter(function(reserva) {return !reserva.reservaFinalizada;}).length > 0){
+              this.localReserva = response.data.filter(function(reserva) {return !reserva.reservaFinalizada;})[0];
+              this.localShowReservation = true;
+            }
+          });
       } else {
         this.localUsuario = null;
         this.localUserLogged = false;

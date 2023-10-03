@@ -105,21 +105,21 @@
       <table v-show="localAplicarFiltro" aria-describedby="vueloTable" class="table">
         <thead>
           <tr>
-            <th>Aerolínea</th>
-            <th>Origen</th>
-            <th>Destino</th>
-            <th>Fecha de ida</th>
-            <th>Fecha de vuelta</th>
-            <th>Clase</th>
-            <th>Con Escala</th>
-            <th>Precio</th>
-            <th>Valoración de Aerolínea</th>
+            <th @click="ordenar('nombreAerolinea')">Aerolínea <i :class="iconoOrden('nombreAerolinea')"></i></th>
+            <th @click="ordenar('origen.ciudad')">Origen <i :class="iconoOrden('origen.ciudad')"></i></th>
+            <th @click="ordenar('destino.ciudad')">Destino <i :class="iconoOrden('destino.ciudad')"></i></th>
+            <th @click="ordenar('fechaIda')">Fecha de ida <i :class="iconoOrden('fechaIda')"></i></th>
+            <th @click="ordenar('fechaVuelta')">Fecha de vuelta <i :class="iconoOrden('fechaVuelta')"></i></th>
+            <th @click="ordenar('clase')">Clase <i :class="iconoOrden('clase')"></i></th>
+            <th @click="ordenar('conEscala')">Con Escala <i :class="iconoOrden('conEscala')"></i></th>
+            <th @click="ordenar('precio')">Precio <i :class="iconoOrden('precio')"></i></th>
+            <th @click="ordenar('valoracionAerolinea')">Valoración de Aerolínea <i :class="iconoOrden('valoracionAerolinea')"></i></th>
             <th v-if="localAllowedToAddVuelo" style="min-width: 185px;"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="vuelo in localVuelos" :key="vuelo.id">
-            <td><img :src="vuelo.link" alt="icon"/> {{ vuelo.nombreAereolinea }}</td>
+            <td><img :src="vuelo.link" alt="icon"/> {{ vuelo.nombreAerolinea }}</td>
             <td>{{ vuelo.origen.pais }}, {{ vuelo.origen.region }}, {{ vuelo.origen.ciudad }}</td>
             <td>{{ vuelo.destino.pais }}, {{ vuelo.destino.region }}, {{ vuelo.destino.ciudad }}</td>
             <td>{{ new Date(vuelo.fechaIda).toLocaleString() }}</td>
@@ -127,7 +127,7 @@
             <td>{{ vuelo.clase }}</td>
             <td>{{ vuelo.conEscala ? "Sí" : "No" }}</td>
             <td>{{ vuelo.precio }}</td>
-            <td>{{ vuelo.valoracionAereolinea }}</td>
+            <td>{{ vuelo.valoracionAerolinea }}</td>
             <td v-if="localAllowedToAddVuelo">
               <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">
                 Agregar a Reserva
@@ -175,7 +175,7 @@ export default {
     aplicarFiltro: {
       type: Boolean,
       default: false
-    },
+    }
   },
   data() {
     return {
@@ -210,6 +210,8 @@ export default {
       localVuelosConValoracionYClase: this.vuelosConValoracionYClase,
       localListaDestinos: this.listaDestinos,
       localAplicarFiltro: this.aplicarFiltro,
+      columnOrden: "",
+      ordenAscendente: true
     }
   },
   watch: {
@@ -316,7 +318,6 @@ export default {
     },
     filtrar(){
       this.localVuelos = this.localVuelosConValoracionYClase;
-      // this.localVuelos = this.localVuelosOriginal;
        if(this.selected.length > 0)
             this.filtrarPorValoracion(); 
        if(this.clasesSeleccionadas.length > 0)
@@ -324,13 +325,50 @@ export default {
     },
     filtrarPorValoracion(){
       this.localVuelos = this.localVuelos.filter(vuelo => {
-        return this.selected.find(select => (select == vuelo.valoracionAereolinea)) != undefined;
+        return this.selected.find(select => (select == vuelo.valoracionAerolinea)) != undefined;
       })
     },
     filtrarClase(){
        this.localVuelos = this.localVuelos.filter(vuelo => {
         return this.clasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined;
       })
+    },
+    ordenar(columna) {
+      // Verifica si la columna es la misma que la última seleccionada
+      if (this.columnOrden === columna) {
+        // Cambia la dirección de clasificación
+        this.ordenAscendente = !this.ordenAscendente;
+      } else {
+        // Si se selecciona una columna diferente, restablece la dirección a ascendente
+        this.columnOrden = columna;
+        this.ordenAscendente = true;
+      }
+      // Realiza la clasificación de acuerdo a la columna seleccionada y la dirección
+      this.localVuelos.sort((a, b) => {
+        const valueA = this.obtenerValor(a, columna);
+        const valueB = this.obtenerValor(b, columna);
+
+        if (valueA === valueB) return 0;
+        if (this.ordenAscendente) {
+          return valueA < valueB ? -1 : 1;
+        } else {
+          return valueA > valueB ? -1 : 1;
+        }
+      });
+    },
+    obtenerValor(obj, columna) {
+      // Función auxiliar para obtener el valor de una propiedad anidada en un objeto
+      const propiedades = columna.split('.');
+      for (let propiedad of propiedades) {
+        obj = obj[propiedad];
+      }
+      return obj;
+    },
+    iconoOrden(columna) {
+      // Devuelve la clase de icono de FontAwesome basada en la dirección de clasificación
+      if (this.columnOrden === columna) {
+        return this.ordenAscendente ? 'fa fa-arrow-up' : 'fa fa-arrow-down';
+      }
     },
     agregarVueloAReserva(vuelo) {
       if (this.localReservaActiva == null) {
@@ -469,5 +507,14 @@ export default {
 
 .slider::-webkit-slider-thumb:active {
   background-color: rgb(151, 60, 60);
+}
+
+th:hover {
+  cursor: pointer;
+  background-color: #fafafa;
+}
+
+th:active {
+  background-color: #e5e5e5;
 }
 </style>

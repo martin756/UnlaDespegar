@@ -4,20 +4,36 @@
       <div v-show="!localLoginExitoso" class="alert alert-danger" role="alert">
         Mail o contraseña incorrecta.
       </div>
-      <form class="form-signin">
-        <h1 class="h3 mb-3 font-weight-normal">Iniciar Sesión</h1>
+      <div v-show="!localUpdateExitoso" class="alert alert-success" role="alert">
+        Contraseña actualizada!.
+      </div>
+      <form class="needs-validation" novalidate ref="loginForm" @submit.prevent="handleSubmit">
+        <h1 class="h3 mb-3 font-weight-normal">{{localShowForgot ? "Recuperar Contraseña" : "Iniciar Sesión"}}</h1>
         <label for="mail">Mail</label>
-        <input type="text" class="form-control options" id="mail" v-model="localMail" required />
-        <div v-if="localMailAlert" class="alert alert-danger" role="alert">{{ localMailMessage }}</div>
+        <input type="text" class="form-control options" id="mail" v-model="localMail" required/>
+        <div class="invalid-feedback">Ingrese un mail</div>
         <br />
-        <label for="password">Contraseña</label>
-        <input type="password" class="form-control options" id="password" v-model="localPassword" required />
-        <div v-if="localPasswordAlert" class="alert alert-danger" role="alert">{{ localPasswordMessage }}</div>
+        <label for="password">{{ localShowForgot ? "Nueva Contraseña" : "Contraseña" }}</label>
+        <input type="password" class="form-control options" id="password" v-model="localPassword" required/>
+        <div class="invalid-feedback">Ingrese una contraseña</div>
         <br />
-        <button @click="login" class="btn btn-lg btn-primary btn-block options" type="submit">Iniciar Sesion</button>
+        <div v-if="localShowForgot">
+          <label for="password">Repetir Contraseña</label>
+          <input type="password" class="form-control options" id="newPassword" v-model="localNewPassword" 
+            :pattern="localPassword" required="this.localShowForgot"/>
+          <div class="invalid-feedback">Las contraseñas no coinciden</div>
+          <br />
+        </div>
+        <button v-if="!localShowForgot" @click="()=>{this.localShowForgot = true;}" 
+          class="btn btn-forgot btn-lg btn-link btn-block options" type="button">Olvidé mi contraseña
+        </button>
+        <br />
+        <button class="btn btn-lg btn-primary btn-block options" 
+          type="submit">{{localShowForgot ? "Aceptar" : "Iniciar Sesión"}}
+        </button>
       </form>
       <br>
-      <button @click="volver" class="btn btn-lg btn-primary btn-block options" type="submit">Cancelar</button>
+      <button @click="volver" class="btn btn-lg btn-primary btn-block options" type="button">Cancelar</button>
     </div>
   </div>
 </template>
@@ -27,108 +43,99 @@ export default {
   name: "Login",
   props: {
     mail: null,
-    mailAlert: {
-      type: Boolean,
-      default: false
-    },
-    mailMessage: null,
-
     password: null,
-    passwordAlert: {
-      type: Boolean,
-      default: false
-    },
-    passwordMessage: null,
+    newPassword: null,
+    newPasswordMessage: null,
 
     loginExitoso: {
       type: Boolean,
       default: true
     },
+    updateExitoso: {
+      type: Boolean,
+      default: true
+    },
+    showForgot: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
       localMail: this.mail,
-      localMailAlert: this.mailAlert,
-      localMailMessage: this.mailMessage,
-
       localPassword: this.password,
-      localPasswordAlert: this.passwordAlert,
-      localPasswordMessage: this.passwordMessage,
+      localNewPassword: this.newPassword,
 
-      localLoginExitoso: this.loginExitoso
+      localLoginExitoso: this.loginExitoso,
+      localUpdateExitoso: this.updateExitoso,
+      localShowForgot: this.showForgot
     }
   },
   watch: {
-    mail(newVal) {
-      this.localMail = newVal;
-    },
-    mailAlert(newVal) {
-      this.localMailAlert = newVal;
-    },
-    mailMessage(newVal) {
-      this.localMailMessage = newVal;
-    },
-    
-    password(newVal) {
-      this.localPassword = newVal;
-    },
-    passwordAlert(newVal) {
-      this.localPasswordAlert = newVal;
-    },
-    passwordMessage(newVal) {
-      this.localPasswordMessage = newVal;
-    },
+    mail(newVal) { this.localMail = newVal; },
+    password(newVal) { this.localPassword = newVal; },
+    newPassword(newVal) { this.localNewPassword = newVal; },
+    newPasswordMessage(newVal) { this.localNewPasswordMessage = newVal; },
 
-    loginExitoso(newVal) {
-      this.localLoginExitoso = newVal;
-    }
+    loginExitoso(newVal) {this.localLoginExitoso = newVal; },
+    updateExitoso(newVal) {this.localUpdateExitoso = newVal; },
+    showForgot(newVal) {this.localShowForgot = newVal; }
   },
   methods: {
     volver() {
-      this.$parent.cargaHome();
+      if (this.localShowForgot) {
+        this.localShowForgot = false;
+      } else {
+        this.$parent.cargaHome();
+      }
     },
     cargaAdmin() {
       this.$parent.cargaAdmin();
     },
-    validar() {
-      this.localIsValid = true;
-
-      const campos = [
-        { nombre: 'localMail', message: 'Ingrese un email', alert: 'localMailAlert' },
-        { nombre: 'localPassword', message: 'Ingrese una contraseña', alert: 'localPasswordAlert' }
-      ];
-
-      for (const campo of campos) {
-        if (!this[campo.nombre]) {
-          this[campo.alert] = true;
-          this[campo.nombre + 'Message'] = campo.message;
-          this.localIsValid = false;
-        } else {
-          this[campo.alert] = false;
-        }
+    handleSubmit() {
+      const form = this.$refs.loginForm;
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
       }
 
-      return this.localIsValid;
+      if (this.localShowForgot) {
+        this.updatePassword()
+      } else {
+        this.login();
+      }
     },
-    login(e) {
-      e.preventDefault();
-      if (this.validar()) {
-        this.$axios
-          .post('https://localhost:57935/api/auth/login', {
-            mail: this.localMail,
-            password: this.localPassword
-          }).then((response) => {
-            if (response.data.cod == 200) {
-              localStorage.setItem('token', response.data.data);
-              this.$parent.init();
-            }
-            if (response.data.cod == 401) {
-              this.localLoginExitoso = false;
-              setTimeout(() => this.localLoginExitoso = true, 2000)
-            }
-          });
-      }
-    }
+    login() {
+      this.$axios
+        .post('https://localhost:57935/api/auth/login', {
+          mail: this.localMail,
+          password: this.localPassword
+        }).then((response) => {
+          if (response.data.cod == 200) {
+            localStorage.setItem('token', response.data.data);
+            this.$parent.init();
+          }
+          if (response.data.cod == 401) {
+            this.displayAlert("localLoginExitoso");
+          }
+        });
+    },
+    updatePassword() {
+      this.$axios
+        .put('https://localhost:57935/api/auth/updatePassword', {
+          mail: this.localMail,
+          password: this.localNewPassword
+        }).then(() => {
+          this.localShowForgot = false;
+          this.displayAlert("localUpdateExitoso");
+        }).catch(() => {
+          this.displayAlert("localLoginExitoso");
+        });
+    },
+    displayAlert(propName) {
+      this[propName] = false;
+      setTimeout(() => this[propName] = true, 2000)
+    },
   },
 };
 </script>
@@ -165,6 +172,11 @@ export default {
 
 .btn {
   width: 200px;
+}
+
+.btn-forgot {
+  width: max-content;
+  color: darkred;
 }
 
 .form-control {

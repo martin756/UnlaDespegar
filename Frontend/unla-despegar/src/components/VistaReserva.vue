@@ -7,10 +7,21 @@
             <h1>Número Reserva: {{ localReservaSeleccionada.id }}</h1>
             <h3>Destino: {{ localReservaSeleccionada.destino.pais }}, {{ localReservaSeleccionada.destino.region }},
               {{ localReservaSeleccionada.destino.ciudad }}</h3>
-            <h3>Total: ${{ localReservaSeleccionada.importe }}</h3>
+            <!-- <div v-if="localReservaSeleccionada.alojamiento != null" style="text-align: start;">
+              <h3>Alojamiento: {{ localReservaSeleccionada.alojamiento.nombreAlojamiento }}</h3>
+              <h3>Tipo de alojamiento: {{ localReservaSeleccionada.alojamiento.tipoAlojamiento.descripcion }}</h3>
+              <h3>Habitaciones: {{ localReservaSeleccionada.alojamiento.tipoHabitacion }}</h3>
+              <h3>Régimen: {{ localReservaSeleccionada.alojamiento.tipoRegimen.descripcion }}</h3>
+              <h3>Servicio: {{ localReservaSeleccionada.alojamiento.tipoServicio }}</h3>
+            </div> -->
+            <h3 v-if="localReservaSeleccionada.vuelo != null">Total: ${{ localReservaSeleccionada.importe }}</h3>
+            <h3 v-if="localReservaSeleccionada.alojamiento != null">Total: ${{ localReservaSeleccionada.alojamiento.precio }}</h3>
           </div>
           <div v-show="!localVueloEliminado" class="alert alert-danger" role="alert">
             El vuelo no ha sido agregado, por favor intente nuevamente.
+          </div>
+          <div v-show="!localAlojamientoEliminado" class="alert alert-danger" role="alert">
+            El Alojamiento no fue eliminado, por favor intente nuevamente.
           </div>
           <div v-show="!localPasajeroEliminado" class="alert alert-danger" role="alert">
             El Pasajero no fue eliminado, por favor intente nuevamente.
@@ -64,8 +75,57 @@
               </table>
             </div>
           </div>
+          <div v-if="localReservaSeleccionada.alojamiento != null">
+            <div class="d-flex align-items-start flex-column my-3 p-3 bg-white rounded box-shadow">
+              <h2>Alojamiento</h2>
+              <table class="table" aria-describedby="">
+                <thead>
+                  <tr>
+                    <th>Alojamiento</th>
+                    <th>Destino</th>
+                    <th>Tipo Alojamiento</th>
+                    <th>Tipo Habitación</th>
+                    <th>Tipo Régimen</th>
+                    <th>Tipo Servicio</th>
+                    <th>Estrellas</th>
+                    <th>Fecha Entrada</th>
+                    <th>Fecha Salida</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{ localReservaSeleccionada.alojamiento.nombreAlojamiento }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.destino.pais }},
+                      {{ localReservaSeleccionada.alojamiento.destino.region }},
+                      {{ localReservaSeleccionada.alojamiento.destino.ciudad }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.tipoAlojamiento.descripcion }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.tipoHabitacion }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.tipoRegimen.descripcion }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.tipoServicio }}</td>
+                    <td>{{ localReservaSeleccionada.alojamiento.cantidadEstrellas }}</td>
+
+
+                    <td v-if="localReservaSeleccionada.reservaFinalizada == false">
+                      <datetime input-class="form-control" format="yyyy/MM/dd T" value-zone="UTC-3"
+                        :min-datetime="currentDate" zone="UTC-3" type="datetime" id="fecha-desde"
+                        placeholder="aaaa/mm/dd HH:MM" v-model="fechaEntrada" required></datetime>
+                    </td>
+                    <td v-else>{{ localReservaSeleccionada.fechaEntrada | moment("DD/MM/YYYY LT") }} </td>
+                    <td v-if="localReservaSeleccionada.reservaFinalizada == false">
+                      <datetime input-class="form-control" format="yyyy/MM/dd T" value-zone="UTC-3"
+                        :min-datetime="fechaDesde" zone="UTC-3" type="datetime" id="fecha-hasta"
+                        placeholder="aaaa/mm/dd HH:MM" v-model="fechaSalida" required></datetime>
+                    </td>
+                    <td v-else>{{ localReservaSeleccionada.fechaSalida | moment("DD/MM/YYYY LT") }} </td>
+                    <td>{{ localReservaSeleccionada.alojamiento.precio }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           <div class="d-flex align-items-start flex-column my-3 p-3 bg-white rounded box-shadow">
-            <h2>Pasajeros</h2>
+            <h2>{{localReservaSeleccionada.vuelo != null ? "Pasajeros" : "Personas"}}</h2>
             <button v-if="!localReservaSeleccionada.reservaFinalizada" @click="vistaAgregarPasajero()" class="btn">
               <i class="fa fa-plus-circle"></i>
             </button>
@@ -114,7 +174,7 @@
             <button @click="volverMenu" type="button" class="btn btn-lg btn-block btn-primary">Volver</button>
             <button v-if="!localReservaSeleccionada.reservaFinalizada" @click="vistaAbonarReserva" type="button"
               class="btn btn-lg btn-block btn-primary">Ir a Abonar Reserva</button>
-            <button v-if="!localReservaSeleccionada.reservaFinalizada" @click="eliminarReserva" type="button"
+            <button @click="eliminarReserva" type="button"
               class="btn btn-lg btn-block btn-primary">Eliminar Reserva</button>
           </div>
         </div>
@@ -256,6 +316,10 @@ export default {
       type: Boolean,
       default: true
     },
+    alojamientoEliminado:{
+      type:Boolean,
+      default: true
+    }, 
     pasajeroEliminado: {
       type: Boolean,
       default: true
@@ -299,6 +363,9 @@ export default {
     domicilio: null,
     mail: null,
     telefono: null,
+    volverFunc: Function,
+    reserva: Boolean,
+    showReservation: Boolean
   },
   data() {
     return {
@@ -317,6 +384,7 @@ export default {
       localFechaEntrada: this.fechaEntrada,
       localFechaSalida: this.fechaSalida,
       localVueloEliminado: this.vueloEliminado,
+      localAlojamientoEliminado: this.alojamientoEliminado,
       localPasajeroEliminado: this.pasajeroEliminado,
       localPasajeroAgregado: this.pasajeroAgregado,
       localPasajeroModificado: this.pasajeroModificado,
@@ -326,6 +394,8 @@ export default {
       localShowEditarPasajero: this.showEditarPasajero,
       localShowAgregarPasajero: this.showAgregarPasajero,
       localShowAbonarReserva: this.showAbonarReserva,
+      localReserva: this.reserva,
+      localShowReservation: this.showReservation
     };
   },
   watch: {
@@ -344,6 +414,7 @@ export default {
     fechaEntrada(newVal) { this.localFechaEntrada = newVal; },
     fechaSalida(newVal) { this.localFechaSalida = newVal; },
     vueloEliminado(newVal) { this.localVueloEliminado = newVal; },
+    alojamientoEliminado(newVal) { this.localAlojamientoEliminado = newVal; },
     pasajeroEliminado(newVal) { this.localPasajeroEliminado = newVal; },
     pasajeroAgregado(newVal) { this.localPasajeroAgregado = newVal; },
     pasajeroModificado(newVal) { this.localPasajeroModificado = newVal; },
@@ -353,13 +424,16 @@ export default {
     showEditarPasajero(newVal) { this.localShowEditarPasajero = newVal; },
     showAgregarPasajero(newVal) { this.localShowAgregarPasajero = newVal; },
     showAbonarReserva(newVal) { this.localShowAbonarReserva = newVal; },
+    reserva(newVal) { this.localReserva = newVal; },
+    showReservation(newVal) { this.localShowReservation = newVal; }
   },
   methods: {
-    volver() {
-      this.$parent.cargaMenu();
-    },
+    // volver() {
+    //   this.$parent.cargaMenu();
+    // },
     volverMenu() {
-      this.$parent.cargaHome();
+      // this.$parent.cargaHome();
+      this.volverFunc();
     },
     volverReserva() {
       this.localShowEditarPasajero = false;
@@ -376,6 +450,7 @@ export default {
             usuario: this.localReservaSeleccionada.usuario.id,
             destino: this.localReservaSeleccionada.destino.id,
             vuelo: null,
+            esUnPaquete: this.reservaSeleccionada.esUnPaquete,
             importe: this.localReservaSeleccionada.importe,
             pasajeros: this.localReservaSeleccionada.pasajeros,
             reservaFinalizada: this.localReservaSeleccionada.reservaFinalizada
@@ -387,6 +462,35 @@ export default {
             this.localVueloEliminado = false;
             setTimeout(() => this.localVueloEliminado = true, 2000);
           });
+    },
+    eliminarAlojamiento() {
+      if (confirm("Deses eliminar alojamiento?")) {
+        this.$axios
+        .put(
+          "https://localhost:57935/api/reserva/" + this.reservaSeleccionada.id,
+          {
+            id: this.reservaSeleccionada.id,
+            nroReserva: this.reservaSeleccionada.nroReserva,
+            usuario: this.reservaSeleccionada.usuario.id,
+            destino: this.reservaSeleccionada.destino.id,
+            alojamiento: null,
+            actividad: this.actividad_id,
+            vuelo: this.vuelo_id,
+            esUnPaquete: this.reservaSeleccionada.esUnPaquete,
+            paquete: null,
+            importe: this.reservaSeleccionada.importe,
+            pasajeros: this.reservaSeleccionada.pasajeros,
+            reservaFinalizada: false
+          }
+        )
+        .then(() => {
+          this.actualizar();
+        })
+        .catch(() => {
+          this.alojamientoEliminado = false;
+          setTimeout(() => this.alojamientoEliminado = true, 2000)
+        });
+      }
     },
     eliminarPasajero(pasajero) {
       if (confirm("Desea eliminar esta pasajero?"))
@@ -513,9 +617,10 @@ export default {
       if (confirm("Desea eliminar reserva")) {
         this.$axios.delete('https://localhost:57935/api/reserva/' + this.localReservaSeleccionada.id)
           .then(() => {
-            this.$parent.localReserva = null;
-            this.$parent.localShowReservation = false;
-            this.$parent.cargaHome();
+            // this.$parent.localReserva = null;
+            // this.$parent.localShowReservation = false;
+            this.$emit("eliminarReserva");
+            this.volverFunc();
           }).catch(() => {
             this.localReservaEliminada = false;
             setTimeout(() => this.localReservaEliminada = true, 2000);
@@ -539,25 +644,16 @@ export default {
           }).then(() => {
             this.$parent.localReserva = null;
             this.$parent.localShowReservation = false;
-            this.$parent.cargaHome();
+            this.$emit("eliminarReserva");
+            this.volverFunc();
           }).catch(() => {
             this.localReservaConfirmada = false;
             setTimeout(() => this.localReservaConfirmada = true, 2000);
           });
       }
     },
-    isTrue(bool) {
-      this.resultado = false;
-      if (bool) {
-        this.resultado = "Si";
-      }
-      else {
-        this.resultado = "No";
-      }
-      return this.resultado;
-    },
     async init() {
-      this.localReservaSeleccionada = this.$parent.localReserva;
+      // this.localReservaSeleccionada = this.$parent.localReserva;
       this.localFechaEntrada = null;
       this.localFechaSalida = null;
       if (this.localReservaSeleccionada.vuelo != null) {

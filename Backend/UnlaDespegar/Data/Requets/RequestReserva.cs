@@ -10,7 +10,11 @@ namespace UnlaDespegar.Data.Requets
         public string NroReserva { get; set; }
         public int Usuario { get; set; }
         public int Destino { get; set; }
+        public int? Alojamiento { get; set; }
+        public int? Actividad { get; set; }
         public int? Vuelo { get; set; }
+        public bool EsUnPaquete { get; set; }
+        public int? Paquete { get; set; }
         public decimal Importe { get; set; }
         public bool ReservaFinalizada { get; set; }
         public List<RequestPasajero> Pasajeros { get; set; }  = new List<RequestPasajero>();

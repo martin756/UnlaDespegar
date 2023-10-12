@@ -6,6 +6,9 @@
           <form>
             <div class="form-row p-2">
               <div class="col">
+                <p style="color:white;">Vuelos</p>
+              </div>
+              <div class="col">
                 <input class="form-check-input" type="radio" v-model="localIdaVuelta" :value="true" name="inlineRadioOptions"
                   id="inlineRadio1">
                 <label class="form-check-label" for="inlineRadio1" style="color:white;">Ida y vuelta</label>
@@ -114,7 +117,7 @@
             <th @click="ordenar('conEscala')">Con Escala <i :class="iconoOrden('conEscala')"></i></th>
             <th @click="ordenar('precio')">Precio <i :class="iconoOrden('precio')"></i></th>
             <th @click="ordenar('valoracionAerolinea')">Valoración de Aerolínea <i :class="iconoOrden('valoracionAerolinea')"></i></th>
-            <th v-if="localAllowedToAddVuelo" style="min-width: 185px;"></th>
+            <th v-if="!$parent.$parent.localReserva" style="min-width: 185px;"></th>
           </tr>
         </thead>
         <tbody>
@@ -128,7 +131,7 @@
             <td>{{ vuelo.conEscala ? "Sí" : "No" }}</td>
             <td>{{ vuelo.precio }}</td>
             <td>{{ vuelo.valoracionAerolinea }}</td>
-            <td v-if="localAllowedToAddVuelo">
+            <td v-if="!$parent.$parent.localReserva">
               <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">
                 Agregar a Reserva
               </b-button>

@@ -1,21 +1,42 @@
 <template>
- <div>
-    <VistaVuelo ref="vuelo"/>
+  <div>
+    <b-container class="bv-example-row">
+      <b-row>
+        <b-col>
+          <button @click="cargaVuelos" class="btn btn-primary"><i class="fas fa-plane"></i> Vuelos</button>
+        </b-col>
+        <b-col>
+          <button @click="cargaAlojamientos" class="btn btn-primary"><i class="fas fa-hotel"></i> Alojamientos</button>
+        </b-col>
+      </b-row>
+    </b-container>
+    <VistaVuelo v-if="localShowVuelos" ref="vuelo"/>
+    <VistaAlojamiento v-if="localShowAlojamientos" />
  </div>
 </template>
 
 <script>
 import VistaVuelo from './VistaVuelo.vue'
+import VistaAlojamiento from './VistaAlojamiento.vue'
 
 export default {
   name: "Home",
   components: {
     VistaVuelo,
+    VistaAlojamiento
   },
   props: {
     destinos: null,
     destino: null,
     activeSearch: {
+      type: Boolean,
+      default: false
+    },
+    showVuelos: {
+      type: Boolean,
+      default: true
+    },
+    showAlojamientos: {
       type: Boolean,
       default: false
     },
@@ -26,33 +47,31 @@ export default {
       localDestinos: this.destinos,
       localDestino: this.destino,
       localActiveSearch: this.activeSearch,
+      localShowVuelos: this.showVuelos,
+      localShowAlojamientos: this.showVuelos,
       localCurrentDestino: this.current_destino,
     }
   },
   watch: {
-    destinos(newVal) {
-      this.localDestinos = newVal;
-    },
-    destino(newVal) {
-      this.localDestino = newVal;
-    },
-    activeSearch(newVal) {
-      this.localActiveSearch = newVal;
-    },
-    current_destino(newVal) {
-      this.localCurrentDestino = newVal;
-    }
+    destinos(newVal) { this.localDestinos = newVal; },
+    destino(newVal) { this.localDestino = newVal; },
+    activeSearch(newVal) { this.localActiveSearch = newVal; },
+    showVuelos(newVal) { this.localShowVuelos = newVal; },
+    showAlojamientos(newVal) { this.localShowAlojamientos = newVal; },
+    current_destino(newVal) { this.localCurrentDestino = newVal; }
   },
   methods: {
     init() {
+      this.cargaVuelos();
     },
-    search(){
-      this.localActiveSearch = true;
-      this.localCurrentDestino = this.localDestinos[this.localDestino-1].ciudad +", " + this.localDestinos[this.localDestino-1].region + ", " + this.localDestinos[this.localDestino-1].pais
+    cargaVuelos() {
+      this.localShowVuelos = true;
+      this.localShowAlojamientos = false;
     },
-    cargaDestinos(){
-      this.localActiveSearch = false;
-    }
+    cargaAlojamientos() {
+      this.localShowVuelos = false;
+      this.localShowAlojamientos = true;
+    },
   },
   mounted() {
     this.init();

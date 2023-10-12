@@ -13,7 +13,7 @@
           <li class="nav-item">
             <a class="nav-link" @click="cargaRegistro" v-if="!localUserLogged" href="#"><i class="fas fa-envelope"></i> Registrarse</a>
           </li>
-          <li class="nav-item" v-if="localShowReservation">
+          <li class="nav-item" v-if="localReserva">
             <a class="nav-link" @click="cargaReserva" href="#"><i class="fas fa-umbrella-beach"></i> Ver Reserva</a>
           </li>
           <li class="nav-item" v-if="localUserLogged">
@@ -29,7 +29,7 @@
     <Registro v-if="localShowRegistro"/>
     <Home v-if="localShowHome" ref="home"/>
     <MiPerfil v-if="localShowPerfil"/>
-    <VistaReserva v-if="localShowReserva"/>
+    <VistaReserva v-if="localShowReserva" :reservaSeleccionada="localReserva" :volverFunc="cargaHome" @eliminarReserva="eliminarReserva"/>
   </div>
 </template>
 
@@ -182,6 +182,10 @@ export default {
       this.localShowPerfil = false;
       this.localShowReserva = true;
       this.localShowAbonar = false; 
+    },
+    eliminarReserva() {
+      this.localReserva = null;
+      this.localShowReservation = false;
     },
     init() {
       const token = localStorage.getItem('token');

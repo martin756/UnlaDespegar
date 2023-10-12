@@ -11,7 +11,11 @@ namespace UnlaDespegar.Data
         public string NroReserva { get; set; }
         public UsuarioResponse Usuario { get; set; }
         public DestinoResponse Destino { get; set; }
+        public AlojamientoResponse Alojamiento { get; set; }
+        public ActividadResponse Actividad { get; set; }
         public VueloResponse Vuelo { get; set; }
+        public bool EsUnPaquete { get; set; }
+        public PaqueteResponse Paquete { get; set; }
         public decimal Importe { get; set; }
         public bool ReservaFinalizada { get; set; }
         public List<PasajeroResponse> Pasajeros { get; set; } = new List<PasajeroResponse>();

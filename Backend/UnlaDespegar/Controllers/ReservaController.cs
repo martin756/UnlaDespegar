@@ -34,6 +34,23 @@ namespace UnlaDespegar.Controllers
                 .Include(x => x.VueloNavigation)
                 .Include(x => x.VueloNavigation.OrigenNavigation)
                 .Include(x => x.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ActividadNavigation)
+                .Include(x => x.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation)
+                .Include(x => x.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoAlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation)
+                .Include(x => x.PaqueteNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.OrigenNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoAlojamientoNavigation)
                 .ToList().OrderBy(x => x.Id);
             response = _mapper.Map<IEnumerable<Reserva>, IEnumerable<ReservaResponse>>(resultDb);
 
@@ -43,7 +60,14 @@ namespace UnlaDespegar.Controllers
             {
                 var pasajeroDeReserva = pasajeros.Where(x => x.Reserva == reserva.Id);
                 reserva.Pasajeros.AddRange(pasajeroDeReserva);
-                reserva.Importe = (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0);
+                if (reserva.EsUnPaquete)
+                {
+                    reserva.Importe = reserva.Paquete.Precio;
+                }
+                else
+                {
+                    reserva.Importe = (reserva.Alojamiento != null ? (reserva.Alojamiento.Precio * Convert.ToDecimal(Math.Round((reserva.FechaSalida - reserva.FechaEntrada).TotalDays))) : 0) + (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0) + (reserva.Actividad != null ? (reserva.Actividad.Precio * reserva.Pasajeros.Count()) : 0);
+                }
             }
 
             return response;
@@ -58,13 +82,38 @@ namespace UnlaDespegar.Controllers
                 .Include(x => x.VueloNavigation)
                 .Include(x => x.VueloNavigation.OrigenNavigation)
                 .Include(x => x.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ActividadNavigation)
+                .Include(x => x.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation)
+                .Include(x => x.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoAlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation)
+                .Include(x => x.PaqueteNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.OrigenNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoAlojamientoNavigation)
                 .FirstOrDefault(u => u.Id == id);
             response = _mapper.Map<Reserva, ReservaResponse>(resultDb);
 
             var pasajeros = _pasajeroController.Get().ToList();
             var pasajeroDeReserva = pasajeros.Where(x => x.Reserva == response.Id);
             response.Pasajeros.AddRange(pasajeroDeReserva);
-            response.Importe = (response.Vuelo != null ? (response.Vuelo.Precio * response.Pasajeros.Count()) : 0);
+            
+            if (response.EsUnPaquete)
+            {
+                response.Importe = response.Paquete.Precio;
+            }
+            else
+            {
+                response.Importe = (response.Alojamiento != null ? (response.Alojamiento.Precio * Convert.ToDecimal(Math.Round((response.FechaSalida - response.FechaEntrada).TotalDays))) : 0) + (response.Vuelo != null ? (response.Vuelo.Precio * response.Pasajeros.Count()) : 0) + (response.Actividad != null ? (response.Actividad.Precio * response.Pasajeros.Count()) : 0);
+            }
 
             return response;
         }
@@ -79,6 +128,23 @@ namespace UnlaDespegar.Controllers
                 .Include(x => x.VueloNavigation)
                 .Include(x => x.VueloNavigation.OrigenNavigation)
                 .Include(x => x.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ActividadNavigation)
+                .Include(x => x.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation)
+                .Include(x => x.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.AlojamientoNavigation.TipoAlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation)
+                .Include(x => x.PaqueteNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.OrigenNavigation)
+                .Include(x => x.PaqueteNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation)
+                .Include(x => x.PaqueteNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.PaqueteNavigation.AlojamientoNavigation.TipoAlojamientoNavigation)
                 .Where(u => u.UsuarioNavigation.Id == id);
             response = _mapper.Map<IEnumerable<Reserva>, IEnumerable<ReservaResponse>>(resultDb);
 
@@ -88,7 +154,14 @@ namespace UnlaDespegar.Controllers
             {
                 var pasajeroDeReserva = pasajeros.Where(x => x.Reserva == reserva.Id);
                 reserva.Pasajeros.AddRange(pasajeroDeReserva);
-                reserva.Importe = (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0);
+                if (reserva.EsUnPaquete)
+                {
+                    reserva.Importe = reserva.Paquete.Precio;
+                }
+                else
+                {
+                    reserva.Importe = (reserva.Alojamiento != null ? (reserva.Alojamiento.Precio * Convert.ToDecimal(Math.Round((reserva.FechaSalida - reserva.FechaEntrada).TotalDays))) : 0) + (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0) + (reserva.Actividad != null ? (reserva.Actividad.Precio * reserva.Pasajeros.Count()) : 0);
+                }
             }
 
             return response;

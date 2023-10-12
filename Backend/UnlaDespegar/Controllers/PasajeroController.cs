@@ -31,7 +31,24 @@ namespace UnlaDespegar.Controllers
                 .Include(x => x.ReservaNavigation.UsuarioNavigation)
                 .Include(x => x.ReservaNavigation.VueloNavigation)
                 .Include(x => x.ReservaNavigation.VueloNavigation.OrigenNavigation)
-                .Include(x => x.ReservaNavigation.VueloNavigation.DestinoNavigation);
+                .Include(x => x.ReservaNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.ActividadNavigation)
+                .Include(x => x.ReservaNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.TipoAlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation.OrigenNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.ActividadNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.TipoAlojamientoNavigation).ToList().OrderBy(x => x.Id); 
             response = _mapper.Map<IEnumerable<Pasajero>, IEnumerable<PasajeroResponse>>(resultDb);
             return response;
         }
@@ -45,7 +62,24 @@ namespace UnlaDespegar.Controllers
                 .Include(x => x.ReservaNavigation.UsuarioNavigation)
                 .Include(x => x.ReservaNavigation.VueloNavigation)
                 .Include(x => x.ReservaNavigation.VueloNavigation.OrigenNavigation)
-                .Include(x => x.ReservaNavigation.VueloNavigation.DestinoNavigation);
+                .Include(x => x.ReservaNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.ActividadNavigation)
+                .Include(x => x.ReservaNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.ReservaNavigation.AlojamientoNavigation.TipoAlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation.OrigenNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.VueloNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.ActividadNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.ActividadNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.DestinoNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.TipoRegimenNavigation)
+                .Include(x => x.ReservaNavigation.PaqueteNavigation.AlojamientoNavigation.TipoAlojamientoNavigation).FirstOrDefault(u => u.Id == id);
             response = _mapper.Map<Pasajero, PasajeroResponse>((Pasajero)resultDb);
             return response;
         }

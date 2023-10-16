@@ -102,7 +102,7 @@
           <h6>Regimen: {{ alojamiento.tipoRegimen.descripcion }}</h6>
           <h6 v-if="alojamiento.accesoDiscapacitados">Wifi Gratis</h6>
           <h5>${{ alojamiento.precio }}</h5>
-          <b-button v-if="!$parent.$parent.localReserva" @click="agregarAlojamientoAReserva(alojamiento)"
+          <b-button v-if="!$parent.$parent.localReserva && localAllowedToAddAlojamiento" @click="agregarAlojamientoAReserva(alojamiento)"
             variant="primary">Agregar a Reserva</b-button>
         </b-card>
         <h5 v-if="localAlojamientos && localAlojamientos.length == 0">Sin resultados</h5>

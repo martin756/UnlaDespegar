@@ -56,25 +56,40 @@
                 </datalist>
               </div>
               <div class="col p-0" style="text-align: start;">
-                <b-form-datepicker
-                  id="Desde"
-                  placeholder="Desde"
-                  :min="new Date()"
-                  v-model="localFechaDesde"
-                  :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
-                  locale="es-ES"
-                ></b-form-datepicker>
+                <div class="input-group">
+                  <b-form-datepicker
+                    id="Desde"
+                    placeholder="Desde"
+                    :min="new Date()"
+                    v-model="localFechaDesde"
+                    :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
+                    locale="es-ES"
+                    @input="()=>{if (new Date(this.localFechaDesde) > new Date(this.localFechaHasta)) this.localFechaHasta = undefined}"
+                  ></b-form-datepicker>
+                  <div @click="localFechaDesde = ''; localFechaHasta = ''" type="button" v-if="localFechaDesde" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col p-0" style="text-align: start;">
-                <b-form-datepicker
-                  id="Hasta"
-                  placeholder="Hasta"
-                  :min="localFechaDesde"
-                  :disabled="!localFechaDesde"
-                  v-model="localFechaHasta"
-                  :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
-                  locale="es-ES"
-                ></b-form-datepicker>
+                <div class="input-group">
+                  <b-form-datepicker
+                    id="Hasta"
+                    placeholder="Hasta"
+                    :min="localFechaDesde"
+                    :disabled="!localFechaDesde"
+                    v-model="localFechaHasta"
+                    :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
+                    locale="es-ES"
+                  ></b-form-datepicker>
+                  <div @click="localFechaHasta = ''" type="button" v-if="localFechaHasta" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="">
                 <button type="button" class="btn btn-success" @click="submit"><i class="fas fa-search"></i> Buscar</button>

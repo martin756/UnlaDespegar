@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light no-print">
-      <a class="navbar-brand nav-item nav-link" @click="cargaHome" href="#">UNLaDespegar</a>
+      <a class="navbar-brand nav-item nav-link link" @click="cargaHome" href="#"><div>U N L a D E S P E G A R</div><div style="font-size: smaller;">Tu reserva al instante!</div></a>
       <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul id="navbar-options" class="navbar-nav ml-auto">
           <li class="nav-item" v-if="localShowTravels">
@@ -188,7 +188,7 @@ export default {
       this.localShowReservation = false;
     },
     init() {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       if (token) {
         this.localUsuario = JSON.parse(JSON.parse(atob(token.split(".")[1])).UserData);
         this.localUserLogged = true;
@@ -212,7 +212,8 @@ export default {
     },
     logout() {
       this.$refs.home.$refs.vuelo.localAllowedToAddVuelo = false;
-      localStorage.removeItem('token');
+      this.localReserva = null;
+      sessionStorage.removeItem('token');
       this.init();
     }
   },
@@ -223,6 +224,7 @@ export default {
 </script>
 
 <style>
+@import "./global.css";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -242,6 +244,11 @@ export default {
 }
 .navbar-light .navbar-nav .nav-link, .fas {
   color: white !important;
+}
+.link {
+  display: flex !important;
+  align-items: center;
+  gap: 1rem;
 }
 @media print {
   .no-print {

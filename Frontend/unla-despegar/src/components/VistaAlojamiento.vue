@@ -2,53 +2,73 @@
   <div>
     <div class="container">
       <div class="row d-flex justify-content-center mt-3 filtro">
-        <div class="col-9">
+        <div class="col-12">
           <form>
-            <div class="form-row p-2">
-              <div class="col">
-                <b-form-input list="alojamiento" v-model="localTipoAlojamiento" placeholder="Tipo alojamiento"></b-form-input>
+            <div class="d-flex col-12 p-2 align-items-center" style="gap: 1rem;">
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="alojamiento" v-model="localTipoAlojamiento" placeholder="Tipo alojamiento"></b-form-input>
+                  <div @click="localTipoAlojamiento = ''" type="button" v-if="localTipoAlojamiento" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="alojamiento">
-                  <select v-model="localTipoAlojamiento" class="form-control">
-                    <option v-for="tipoAlojamiento in localTiposAlojamiento" :key="tipoAlojamiento"
-                      :value="tipoAlojamiento"></option>
-                  </select>
+                  <option v-for="tipoAlojamiento in localTiposAlojamiento" :key="tipoAlojamiento"
+                    :value="tipoAlojamiento"></option>
                 </datalist>
               </div>
-              <div class="col">
-                <b-form-input list="serv" v-model="localServicio" placeholder="Tipo servicio"></b-form-input>
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="serv" v-model="localServicio" placeholder="Tipo servicio"></b-form-input>
+                  <div @click="localServicio = ''" type="button" v-if="localServicio" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="serv">
-                  <select v-model="localServicio" class="form-control">
-                    <option v-for="tipoServicio in localTiposServicios" :key="tipoServicio"
-                      :value="tipoServicio"></option>
-                  </select>
+                  <option v-for="tipoServicio in localTiposServicios" :key="tipoServicio"
+                    :value="tipoServicio"></option>
                 </datalist>
               </div>
-              <div class="col">
-                <b-form-input list="regimen" v-model="localRegimen" placeholder="Tipo regimen"></b-form-input>
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="regimen" v-model="localRegimen" placeholder="Tipo regimen"></b-form-input>
+                  <div @click="localRegimen = ''" type="button" v-if="localRegimen" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="regimen">
-                  <select v-model="localRegimen" class="form-control">
-                    <option v-for="tipoRegimen in localTiposRegimenes" :key="tipoRegimen"
-                      :value="tipoRegimen"></option>
-                  </select>
+                  <option v-for="tipoRegimen in localTiposRegimenes" :key="tipoRegimen"
+                    :value="tipoRegimen"></option>
                 </datalist>
               </div>
-              <div class="col">
-                <b-form-input list="hab" v-model="localHabitacion" placeholder="Tipo habitacion"></b-form-input>
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="hab" v-model="localHabitacion" placeholder="Tipo habitacion"></b-form-input>
+                  <div @click="localHabitacion = ''" type="button" v-if="localHabitacion" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="hab">
-                  <select v-model="localHabitacion" class="form-control">
-                    <option v-for="tipoHabitacion in localTiposHabitaciones" :key="tipoHabitacion"
-                      :value="tipoHabitacion"></option>
-                  </select>
+                  <option v-for="tipoHabitacion in localTiposHabitaciones" :key="tipoHabitacion"
+                    :value="tipoHabitacion"></option>
                 </datalist>
               </div>
-              <div class="col">
-                <button type="button" class="btn btn-success" @click="submit">Buscar</button>
+              <div class="">
+                <button type="button" class="btn btn-success" @click="submit"><i class="fas fa-search"></i> Buscar</button>
               </div>
             </div>
           </form>
         </div>
       </div>
-      <div class="row d-flex justify-content-end ">
+      <div v-if="localAplicarFiltro" class="row d-flex justify-content-end">
         <div class="col-3">
           <b-dropdown id="dropdown-4" text="Cantidad estrellas" class="m-md-2" variant="outline-success">
             <b-dropdown-form>
@@ -69,10 +89,10 @@
     <div v-show="localAlojamientoNoAgregado" class="alert alert-danger" role="alert">
       El alojamiento no ha sido agregado, por favor intente nuevamente.
     </div>
-    <div class="my-3 p-3 rounded container">
-      <div v-if="localAplicarFiltro">
+    <div class="my-3 p-3 rounded container" style="max-width: 1072px;">
+      <div v-if="localAplicarFiltro" style="display: flex; flex-wrap: wrap; justify-content: center;">
         <b-card v-for="alojamiento in localAlojamientos" :key="alojamiento.id" :title="alojamiento.nombreAlojamiento"
-          img-src="https://imgcy.trivago.com/c_limit,d_dummy.jpeg,f_auto,h_1300,q_auto,w_2000/itemimages/21/90/219001_v5.jpeg"
+          :img-src="alojamiento.link"
           img-alt="Image" img-top class="mb-2 flight">
           <h6>{{ alojamiento.destino.ciudad }}, {{ alojamiento.destino.region }}, {{ alojamiento.destino.pais }}</h6>
           <h6>{{ alojamiento.cantidadEstrellas }} estrellas</h6>
@@ -82,9 +102,10 @@
           <h6>Regimen: {{ alojamiento.tipoRegimen.descripcion }}</h6>
           <h6 v-if="alojamiento.accesoDiscapacitados">Wifi Gratis</h6>
           <h5>${{ alojamiento.precio }}</h5>
-          <!-- <b-button v-if="!$parent.$parent.localReserva" @click="agregarAlojamientoAReserva(alojamiento)"
-            variant="primary">Agregar a Reserva</b-button> -->
+          <b-button v-if="!$parent.$parent.localReserva" @click="agregarAlojamientoAReserva(alojamiento)"
+            variant="primary">Agregar a Reserva</b-button>
         </b-card>
+        <h5 v-if="localAlojamientos && localAlojamientos.length == 0">Sin resultados</h5>
       </div>
     </div>
   </div>
@@ -204,12 +225,6 @@ export default {
               this.localReservaActiva = response.data.filter(function (reserva) { return !reserva.reservaFinalizada; })[0];
               this.$parent.$parent.localShowReservation = true;
               this.$parent.$parent.localReserva = this.localReservaActiva;
-              if (this.localReservaActiva.vuelo != null) {
-                this.localReservaActiva.vuelo = this.localReservaActiva.vuelo.id;
-              }
-              if (this.localReservaActiva.actividad != null) {
-                this.localReservaActiva.actividad = this.localReservaActiva.actividad.id;
-              }
               if (this.localReservaActiva.alojamiento != null || this.localReservaActiva.esUnPaquete) {
                 this.localAllowedToAddAlojamiento = false;
               }
@@ -350,6 +365,12 @@ export default {
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .lh-condensed {
   line-height: 1.25;
 }
@@ -363,7 +384,7 @@ export default {
 }
 
 .flight {
-  display: inline-block;
+  display: flex;
   max-width: 15rem;
   margin-right: 20px;
 }</style>

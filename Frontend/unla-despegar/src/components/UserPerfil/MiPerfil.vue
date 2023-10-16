@@ -5,13 +5,13 @@
       <div showMenu class="row">
         <div class="options text-center">
           <button @click="cargaEditarPerfil" type="button" class="btn btn-lg btn-block btn-primary">
-            Editar mis Datos
+            <i class="fas fa-user-edit"></i> Editar mis Datos
           </button>
           <button @click="cargaMisReservas" type="button" class="btn btn-lg btn-block btn-primary">
-            Mis Reservas
+            <i class="fas fa-list"></i> Mis Reservas
           </button>
           <button @click="volver" type="button" class="btn btn-lg btn-block btn-primary">
-            Volver
+            <i class="fas fa-arrow-left"></i> Volver
           </button>
         </div>
       </div>
@@ -124,5 +124,19 @@ export default {
   color: #fff;
   background-color: darkred;
   border-color: black;
+}
+
+.btn-primary:hover {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:focus {
+  background-color: #8b0000b3;
+  border-color: #cc000093;
+  box-shadow: 0 0 0 0.2rem rgba(255, 38, 38, 0.5);
 }
 </style>

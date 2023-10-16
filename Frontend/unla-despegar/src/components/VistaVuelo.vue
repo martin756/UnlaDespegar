@@ -2,81 +2,99 @@
   <div>
     <div class="container">
       <div class="row d-flex justify-content-center mt-3 filtro">
-        <div class="col-9">
+        <div class="col-12">
           <form>
-            <div class="form-row p-2">
-              <div class="col">
-                <p style="color:white;">Vuelos</p>
-              </div>
-              <div class="col">
-                <input class="form-check-input" type="radio" v-model="localIdaVuelta" :value="true" name="inlineRadioOptions"
+            <div class="form-row p-2 justify-content-center">
+              <div class="col-2">
+                <input class="form-check-input" type="checkbox" v-model="localIdaVuelta" @change="()=>{if(!this.localIdaVuelta){this.localIdaVuelta = undefined} this.localIda = false}" name="inlineRadioOptions"
                   id="inlineRadio1">
                 <label class="form-check-label" for="inlineRadio1" style="color:white;">Ida y vuelta</label>
               </div>
-              <div class="col">
-                <input class="form-check-input" type="radio" v-model="localIdaVuelta" :value="false" name="inlineRadioOptions"
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" v-model="localIda" @change="()=>{this.localIda ? this.localIdaVuelta = false : this.localIdaVuelta = undefined}" name="inlineRadioOptions"
                   id="inlineRadio2">
                 <label class="form-check-label" for="inlineRadio2" style="color:white;">Ida</label>
               </div>
-              <div class="col">
-                <input class="form-check-input" type="radio" v-model="localEscala" :value="false" name="escalaOptions"
+              <div class="col-2">
+                <input class="form-check-input" type="checkbox" v-model="localDirecto" @change="()=>{this.localDirecto ? this.localEscala = false : this.localEscala = undefined}" name="escalaOptions"
                   id="escalaRadio1">
                 <label class="form-check-label" for="escalaRadio1" style="color:white;">Directo</label>
               </div>
-              <div class="col">
-                <input class="form-check-input" type="radio" v-model="localEscala" :value="true" name="escalaOptions"
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" v-model="localEscala" @change="()=>{if(!this.localEscala){this.localEscala = undefined} this.localDirecto = false}" name="escalaOptions"
                   id="escalaRadio2">
                 <label class="form-check-label" for="escalaRadio2" style="color:white;">Con escala</label>
               </div>
             </div>
-            <div class="form-row p-2">
-              <div class="col">
-                <b-form-input list="origen" v-model="localOrigen" placeholder="Origen"></b-form-input>
+            <div class="d-flex col-12 p-2 align-items-center" style="gap: 1rem;">
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="origen" v-model="localOrigen" placeholder="Origen"></b-form-input>
+                  <div @click="localOrigen = ''" type="button" v-if="localOrigen" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="origen">
-                  <select v-model="localOrigen" class="form-control">
-                    <option v-for="vueloOrigen in localListaDestinos" :key="vueloOrigen.id" :value="vueloOrigen.ciudad">
-                      {{ vueloOrigen.region }} </option>
-                  </select>
+                  <option v-for="vueloOrigen in localListaDestinos" :key="vueloOrigen.id" :value="vueloOrigen.ciudad">
+                    {{ vueloOrigen.region }}.</option>
                 </datalist>
               </div>
-              <div class="col">
-                <b-form-input list="destino" v-model="localDestino" placeholder="Destino"></b-form-input>
+              <div class="col p-0">
+                <div class="input-group">
+                  <b-form-input list="destino" v-model="localDestino" placeholder="Destino"></b-form-input>
+                  <div @click="localDestino = ''" type="button" v-if="localDestino" class="form-control" style="max-width: fit-content;">
+                    <div style="background-color: white;">
+                      <i class="fas fa-times"></i>
+                    </div>
+                  </div>
+                </div>
                 <datalist id="destino">
-                  <select v-model="localDestino" class="form-control">
-                    <option v-for="vueloDestino in localListaDestinos" :key="vueloDestino.id"
-                      :value="vueloDestino.ciudad">{{ vueloDestino.region }} </option>
-                  </select>
+                  <option v-for="vueloDestino in localListaDestinos" :key="vueloDestino.id"
+                    :value="vueloDestino.ciudad">{{ vueloDestino.region }}.</option>
                 </datalist>
               </div>
-              <div class="col">
-                <datetime input-class="form-control" format="dd/MM/yyyy T" value-zone="UTC-3" :min-datetime="currentDate"
-                  zone="UTC-3" type="datetime" id="fecha-desde" placeholder="Desde" v-model="localFechaDesde" required>
-                </datetime>
+              <div class="col p-0" style="text-align: start;">
+                <b-form-datepicker
+                  id="Desde"
+                  placeholder="Desde"
+                  :min="new Date()"
+                  v-model="localFechaDesde"
+                  :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
+                  locale="es-ES"
+                ></b-form-datepicker>
               </div>
-              <div class="col">
-                <datetime input-class="form-control" format="yyyy/MM/dd T" value-zone="UTC-3" :min-datetime="currentDate"
-                  zone="UTC-3" type="datetime" id="fecha-desde" placeholder="Hasta" v-model="localFechaHasta" required>
-                </datetime>
+              <div class="col p-0" style="text-align: start;">
+                <b-form-datepicker
+                  id="Hasta"
+                  placeholder="Hasta"
+                  :min="localFechaDesde"
+                  :disabled="!localFechaDesde"
+                  v-model="localFechaHasta"
+                  :date-format-options="{ year: 'numeric', month: 'short', day: '2-digit' }"
+                  locale="es-ES"
+                ></b-form-datepicker>
               </div>
-              <div class="col">
-                <button type="button" class="btn btn-success" @click="submit">Buscar</button>
+              <div class="">
+                <button type="button" class="btn btn-success" @click="submit"><i class="fas fa-search"></i> Buscar</button>
               </div>
             </div>
           </form>
         </div>
       </div>
-      <div class="row justify-content-end align-items-center">
+      <div v-if="localAplicarFiltro" class="row justify-content-end align-items-center">
         <div>$ 0</div>
         <div class="col-3">Precio
           <b-form-input type="range" min="0" :max="localPrecioMaximo" v-model="localPrecio" 
-          step="10" class="slider"></b-form-input>
+          step="10" class="slider" @change="filtrar"></b-form-input>
         </div>
         <div style="min-width: 60px;">$ {{ localPrecio }}</div>
         <div class="col-2">
           <b-dropdown id="dropdown-1" text="Valoracion" class="m-md-2" variant="outline-success">
             <b-dropdown-form>
               <b-form-group label="Estrellas:">
-                <b-form-checkbox v-for="option in options" v-model="selected" :key="option.value" :value="option.value"
+                <b-form-checkbox v-for="option in options" v-model="localSelected" :key="option.value" :value="option.value"
                   name="flavour-3a" @input="filtrar">
                   {{ option.text }}
                 </b-form-checkbox>
@@ -88,7 +106,7 @@
           <b-dropdown id="dropdown-2" text="Clase" class="m-md-2" variant="outline-success">
             <b-dropdown-form>
               <b-form-group label="Selecciona las clases:">
-                <b-form-checkbox v-for="clase in clases" v-model="clasesSeleccionadas" :key="clase.value"
+                <b-form-checkbox v-for="clase in clases" v-model="localClasesSeleccionadas" :key="clase.value"
                   :value="clase.value" name="clases" @input="filtrar">
                   {{ clase.text }}
                 </b-form-checkbox>
@@ -117,7 +135,7 @@
             <th @click="ordenar('conEscala')">Con Escala <i :class="iconoOrden('conEscala')"></i></th>
             <th @click="ordenar('precio')">Precio <i :class="iconoOrden('precio')"></i></th>
             <th @click="ordenar('valoracionAerolinea')">Valoración de Aerolínea <i :class="iconoOrden('valoracionAerolinea')"></i></th>
-            <th v-if="!$parent.$parent.localReserva" style="min-width: 185px;"></th>
+            <th v-if="!$parent.$parent.localReserva && localAllowedToAddVuelo" style="min-width: 185px;"></th>
           </tr>
         </thead>
         <tbody>
@@ -131,14 +149,15 @@
             <td>{{ vuelo.conEscala ? "Sí" : "No" }}</td>
             <td>{{ vuelo.precio }}</td>
             <td>{{ vuelo.valoracionAerolinea }}</td>
-            <td v-if="!$parent.$parent.localReserva">
-              <b-button @click="agregarVueloAReserva(vuelo)" variant="primary">
+            <td v-if="!$parent.$parent.localReserva && localAllowedToAddVuelo">
+              <b-button @click="agregarVueloAReserva(vuelo)" variant="primary" class="btn btn-primary">
                 Agregar a Reserva
               </b-button>
             </td>
           </tr>
         </tbody>
       </table>
+      <h5 v-if="localVuelos && localVuelos.length == 0">Sin resultados</h5>
     </div>
   </div>
 </template>
@@ -178,11 +197,13 @@ export default {
     aplicarFiltro: {
       type: Boolean,
       default: false
-    }
+    },
+    selected: [],
+    clasesSeleccionadas: []
   },
   data() {
     return {
-      selected: [], // Must be an array reference!
+      localSelected: [], // Must be an array reference!
       options: [
         { text: '5', value: '5' },
         { text: '4', value: '4' },
@@ -190,7 +211,7 @@ export default {
         { text: '2', value: '2' },
         { text: '1', value: '1' }
       ],
-      clasesSeleccionadas: [],
+      localClasesSeleccionadas: [],
       clases: [
         { text: 'Economica', value: 'Económica' },
         { text: 'Primera clase', value: 'Primera Clase' },
@@ -201,8 +222,10 @@ export default {
       localDestino: this.destino,
       localFechaDesde: this.fechaDesde,
       localFechaHasta: this.fechaHasta,
+      localIda: this.ida,
       localIdaVuelta: this.idaVuelta,
       localEscala: this.escala,
+      localDirecto: this.directo,
       localPrecioMaximo: this.precioMaximo,
       localReservaActiva: this.reservaActiva,
       localAllowedToAddVuelo: this.allowedToAddVuelo,
@@ -227,11 +250,17 @@ export default {
     precio(newVal) {
       this.localPrecio = newVal;
     },
+    ida(newVal) {
+      this.localIda = newVal;
+    },
     idaVuelta(newVal) {
       this.localIdaVuelta = newVal;
     },
     escala(newVal) {
       this.localEscala = newVal;
+    },
+    directo(newVal) {
+      this.localDirecto = newVal;
     },
     reservaActiva(newVal) {
       this.localReservaActiva = newVal;
@@ -305,6 +334,10 @@ export default {
       })
     },
     submit() {
+      this.localPrecio = this.localPrecioMaximo;
+      this.localSelected = [];
+      this.localClasesSeleccionadas = [];
+
       this.localAplicarFiltro = true;
       this.localVuelos = this.localVuelosOriginal;
       this.localVuelos = this.localVuelos.filter(this.filtro);
@@ -321,19 +354,26 @@ export default {
     },
     filtrar(){
       this.localVuelos = this.localVuelosConValoracionYClase;
-       if(this.selected.length > 0)
-            this.filtrarPorValoracion(); 
-       if(this.clasesSeleccionadas.length > 0)
-            this.filtrarClase();
+      
+      this.filtrarPorPrecio();
+      if(this.localSelected.length > 0)
+        this.filtrarPorValoracion(); 
+      if(this.localClasesSeleccionadas.length > 0)
+        this.filtrarClase();
+    },
+    filtrarPorPrecio() {
+      this.localVuelos = this.localVuelosConValoracionYClase;
+
+      this.localVuelos = this.localVuelos.filter(vuelo => vuelo.precio <= this.localPrecio)
     },
     filtrarPorValoracion(){
       this.localVuelos = this.localVuelos.filter(vuelo => {
-        return this.selected.find(select => (select == vuelo.valoracionAerolinea)) != undefined;
+        return this.localSelected.find(select => (select == vuelo.valoracionAerolinea)) != undefined;
       })
     },
     filtrarClase(){
        this.localVuelos = this.localVuelos.filter(vuelo => {
-        return this.clasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined;
+        return this.localClasesSeleccionadas.find(select => (select == vuelo.clase)) != undefined;
       })
     },
     ordenar(columna) {
@@ -476,6 +516,12 @@ export default {
 
 .bv-example-row {
   max-height: 300px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: darkred;
+  border-color: black;
 }
 
 .flight {

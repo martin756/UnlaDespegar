@@ -112,9 +112,22 @@ export default {
   color: white;
 }
 .btn-primary {
-    color: #fff;
-    background-color: darkred;
-    border-color: black;
+  color: #fff;
+  background-color: darkred;
+  border-color: black;
+}
+.btn-primary:hover {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:focus {
+  background-color: #8b0000b3;
+  border-color: #cc000093;
+  box-shadow: 0 0 0 0.2rem rgba(255, 38, 38, 0.5);
 }
 .destination {
   color: black;

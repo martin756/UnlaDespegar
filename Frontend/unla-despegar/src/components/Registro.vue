@@ -43,7 +43,11 @@
 
               <br />
               <button type="submit" class="btn btn-lg btn-block btn-primary options">
-                Guardar Cambios
+                <i class="fas fa-save"></i> Guardar Cambios
+              </button>
+              <br />
+              <button @click="volver" type="button" class="btn btn-lg btn-block btn-primary options text-center">
+                <i class="fas fa-arrow-left"></i> Volver Al Menú
               </button>
             </div>
           </div>
@@ -51,13 +55,6 @@
       </div>
     </div>
     <br />
-    <div class="row">
-      <div class="options text-center">
-        <button @click="volver" type="button" class="btn btn-lg btn-block btn-primary options text-center">
-          Volver Al Menú
-        </button>
-      </div>
-    </div>
     <br />
   </div>
 </template>
@@ -175,12 +172,26 @@ export default {
 }
 
 .btn {
-  width: 200px;
+  width: 100%;
 }
 
 .btn-primary {
   color: #fff;
   background-color: darkred;
   border-color: black;
+}
+
+.btn-primary:hover {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:focus {
+  background-color: #8b0000b3;
+  border-color: #cc000093;
+  box-shadow: 0 0 0 0.2rem rgba(255, 38, 38, 0.5);
 }
 </style>

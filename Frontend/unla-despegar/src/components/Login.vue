@@ -7,29 +7,44 @@
       <div v-show="!localUpdateExitoso" class="alert alert-success" role="alert">
         Contraseña actualizada!.
       </div>
-      <form class="needs-validation" novalidate ref="loginForm" @submit.prevent="handleSubmit">
-        <h1 class="h3 mb-3 font-weight-normal">{{localShowForgot ? "Recuperar Contraseña" : "Iniciar Sesión"}}</h1>
-        <label for="mail">Mail</label>
-        <input type="text" class="form-control options" id="mail" v-model="localMail" required/>
-        <div class="invalid-feedback">Ingrese un mail</div>
-        <br />
-        <label for="password">{{ localShowForgot ? "Nueva Contraseña" : "Contraseña" }}</label>
-        <input type="password" class="form-control options" id="password" v-model="localPassword" required/>
-        <div class="invalid-feedback">Ingrese una contraseña</div>
-        <br />
-        <div v-if="localShowForgot">
-          <label for="password">Repetir Contraseña</label>
-          <input type="password" class="form-control options" id="newPassword" v-model="localNewPassword" 
-            :pattern="localPassword" required="this.localShowForgot"/>
-          <div class="invalid-feedback">Las contraseñas no coinciden</div>
+      <form class="needs-validation" novalidate ref="loginForm">
+        <h1 class="h3 mb-3 font-weight-normal">{{localShowForgot || localShowValidationCode ? "Recuperar Contraseña" : "Iniciar Sesión"}}</h1>
+        <div v-if="localShowMail">
+          <label for="mail">Mail</label>
+          <input type="text" class="form-control options" id="mail" v-model="localMail" required/>
+          <div class="invalid-feedback">Ingrese un mail</div>
           <br />
         </div>
-        <button v-if="!localShowForgot" @click="()=>{this.localShowForgot = true;}" 
+        <div v-if="localShowValidationCode">
+          <label for="code">Ingrese el código de seguridad</label>
+          <input type="password" class="form-control options" id="validationCode" v-model="localCode" required="" :pattern="localValidationCode.toString()" />
+          <div class="invalid-feedback">{{!!localCode ? "El código no es correcto" : "Ingrese su código recibido"}}</div>
+        </div>
+        <div v-if="!localShowValidationCode && (localShowForgot || !localShowValidationMail)">
+          <label for="password">{{ localShowForgot ? "Nueva Contraseña" : "Contraseña" }}</label>
+          <input type="password" class="form-control options" id="password" v-model="localPassword" required/>
+          <div class="invalid-feedback">Ingrese una contraseña</div>
+          <br />
+          <div v-if="localShowForgot">
+            <label for="password">Repetir Contraseña</label>
+            <input type="password" class="form-control options" id="newPassword" v-model="localNewPassword" 
+              :pattern="localPassword" required="this.localShowForgot"/>
+            <div class="invalid-feedback">Las contraseñas no coinciden</div>
+            <br />
+          </div>
+        </div>
+        <button v-if="!localShowValidationMail" @click="()=>{this.localShowValidationMail = true;}" 
           class="btn btn-forgot btn-lg btn-link btn-block options" type="button">Olvidé mi contraseña
         </button>
         <br />
-        <button class="btn btn-lg btn-primary btn-block options" 
-          type="submit">{{localShowForgot ? "Aceptar" : "Iniciar Sesión"}}
+        <button v-if="localShowMail && localShowValidationMail" @click="showValidationCodeForm"
+          class="btn btn-lg btn-primary btn-block options" type="button">Recuperar contraseña
+        </button>
+        <button v-if="localShowValidationCode" @click="validateCode"
+          class="btn btn-lg btn-primary btn-block options" type="button">Validar
+        </button>
+        <button v-if="!localShowValidationCode && (localShowForgot || !localShowValidationMail)" class="btn btn-lg btn-primary btn-block options" 
+          type="button" @click="handleSubmit">{{localShowForgot ? "Aceptar" : "Iniciar Sesión"}}
         </button>
       </form>
       <br>
@@ -45,7 +60,7 @@ export default {
     mail: null,
     password: null,
     newPassword: null,
-    newPasswordMessage: null,
+    code: null,
 
     loginExitoso: {
       type: Boolean,
@@ -58,36 +73,92 @@ export default {
     showForgot: {
       type: Boolean,
       default: false
-    }
+    },
+    showMail: {
+      type: Boolean,
+      default: true
+    },
+    showValidationCode: {
+      type: Boolean,
+      default: false
+    },
+    showValidationMail: {
+      type: Boolean,
+      default: false
+    },
+    validationCode: {
+      type: Number,
+      default: 12345678
+    },
   },
   data() {
     return {
       localMail: this.mail,
       localPassword: this.password,
       localNewPassword: this.newPassword,
+      localCode: this.code,
 
       localLoginExitoso: this.loginExitoso,
       localUpdateExitoso: this.updateExitoso,
-      localShowForgot: this.showForgot
+      localShowForgot: this.showForgot,
+      localShowMail: this.showMail,
+      localShowValidationCode: this.showValidationCode,
+      localShowValidationMail: this.showValidationMail,
+      localValidationCode: this.validationCode,
     }
   },
   watch: {
     mail(newVal) { this.localMail = newVal; },
     password(newVal) { this.localPassword = newVal; },
     newPassword(newVal) { this.localNewPassword = newVal; },
-    newPasswordMessage(newVal) { this.localNewPasswordMessage = newVal; },
+    code(newVal) { this.localCode = newVal; },
 
     loginExitoso(newVal) {this.localLoginExitoso = newVal; },
     updateExitoso(newVal) {this.localUpdateExitoso = newVal; },
-    showForgot(newVal) {this.localShowForgot = newVal; }
+    showForgot(newVal) {this.localShowForgot = newVal; },
+    showMail(newVal) {this.localShowMail = newVal; },
+    showValidationCode(newVal) {this.localShowValidationCode = newVal; },
+    showValidationMail(newVal) {this.localShowValidationMail = newVal; },
+    validationCode(newVal) {this.localValidationCode = newVal; },
   },
   methods: {
+    resetStates() {
+      this.localShowForgot = false;
+      this.localShowMail = true;
+      this.localShowValidationCode = false;
+      this.localShowValidationMail = false;
+    },
     volver() {
       if (this.localShowForgot) {
-        this.localShowForgot = false;
+        this.resetStates();
       } else {
         this.$parent.cargaHome();
       }
+    },
+    showValidationCodeForm() {
+      const form = this.$refs.loginForm;
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+      } else {
+        form.classList.remove('was-validated');
+      }
+      this.localShowMail = false;
+      this.localShowValidationCode = true;
+      console.log(this.validationCode);
+    },
+    validateCode() {
+      const form = this.$refs.loginForm;
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+      } else {
+        form.classList.remove('was-validated');
+      }
+
+      this.localCode = null;
+      this.localShowValidationCode = false;
+      this.localShowForgot = true;
     },
     cargaAdmin() {
       this.$parent.cargaAdmin();
@@ -97,10 +168,12 @@ export default {
       if (!form.checkValidity()) {
         form.classList.add('was-validated');
         return;
+      } else {
+        form.classList.remove('was-validated');
       }
 
       if (this.localShowForgot) {
-        this.updatePassword()
+        this.updatePassword();
       } else {
         this.login();
       }
@@ -112,7 +185,7 @@ export default {
           password: this.localPassword
         }).then((response) => {
           if (response.data.cod == 200) {
-            localStorage.setItem('token', response.data.data);
+            sessionStorage.setItem('token', response.data.data);
             this.$parent.init();
           }
           if (response.data.cod == 401) {
@@ -126,8 +199,10 @@ export default {
           mail: this.localMail,
           password: this.localNewPassword
         }).then(() => {
-          this.localShowForgot = false;
+          this.resetStates();
           this.displayAlert("localUpdateExitoso");
+          this.localPassword = null;
+          this.localNewPassword = null;
         }).catch(() => {
           this.displayAlert("localLoginExitoso");
         });
@@ -171,7 +246,7 @@ export default {
 }
 
 .btn {
-  width: 200px;
+  width: 235px;
 }
 
 .btn-forgot {
@@ -187,5 +262,18 @@ export default {
   color: #fff;
   background-color: darkred;
   border-color: black;
+}
+.btn-primary:hover {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:focus {
+  background-color: #8b0000b3;
+  border-color: #cc000093;
+  box-shadow: 0 0 0 0.2rem rgba(255, 38, 38, 0.5);
 }
 </style>

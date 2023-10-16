@@ -25,7 +25,7 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="cc-number">Numero de tarjeta</label>
-              <input type="text" class="form-control" id="cc-number" placeholder="" required="">
+              <input type="number" class="form-control" id="cc-number" placeholder="" required="">
               <div class="invalid-feedback">
                 Numero de tarjeta requerida
               </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="col-md-3 mb-3">
               <label for="cc-expiration">CVV</label>
-              <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
+              <input type="number" class="form-control" id="cc-cvv" placeholder="" required="">
               <div class="invalid-feedback">
                 Código de seguridad requerido
               </div>
@@ -98,6 +98,19 @@ export default {
   background-color: darkred;
   border-color: black;
 }
+.btn-primary:hover {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: #8b0000b3;
+  border-color: #cc0000;
+}
+.btn-primary:focus {
+  background-color: #8b0000b3;
+  border-color: #cc000093;
+  box-shadow: 0 0 0 0.2rem rgba(255, 38, 38, 0.5);
+}
 .container {
   max-width: 960px;
 }
@@ -111,4 +124,8 @@ export default {
 .border-top-gray { border-top-color: #adb5bd; }
 .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 .lh-condensed { line-height: 1.25; }
+
+[type=number] {
+  width: inherit;
+}
 </style>

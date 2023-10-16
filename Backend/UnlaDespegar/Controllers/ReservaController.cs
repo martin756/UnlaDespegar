@@ -160,7 +160,7 @@ namespace UnlaDespegar.Controllers
                 }
                 else
                 {
-                    reserva.Importe = (reserva.Alojamiento != null ? (reserva.Alojamiento.Precio * Convert.ToDecimal(Math.Round((reserva.FechaSalida - reserva.FechaEntrada).TotalDays))) : 0) + (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0) + (reserva.Actividad != null ? (reserva.Actividad.Precio * reserva.Pasajeros.Count()) : 0);
+                    reserva.Importe = (reserva.Alojamiento != null ? (reserva.Alojamiento.Precio * Convert.ToDecimal(Math.Round((reserva.FechaSalida - reserva.FechaEntrada).TotalDays)) * reserva.Pasajeros.Count) : 0) + (reserva.Vuelo != null ? (reserva.Vuelo.Precio * reserva.Pasajeros.Count()) : 0);
                 }
             }
 
